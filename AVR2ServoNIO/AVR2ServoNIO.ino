@@ -1,3 +1,19 @@
+/*
+This is my test version for demonstration only John Holmes
+
+The original sketch is being updated by David Harris the pins in that example may change to suit
+the MERG Arduino shield kit 110.
+
+  - Pin 3 is used for interrupt
+  - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
+  - Pin 11 SI MOSI (Master Out Slave In)
+  - Pin 12 SO MISO (Master In Slave Out)
+  - Pin 13 SCK (Serial Clock)
+
+  - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
+  - Pins A4 & A5 are the servo pins
+
+*/
 //==============================================================
 // AVR 2Servos NIO John's version
 //
@@ -35,8 +51,8 @@
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
-// To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,5,5,0x8E,0x02
+// To set a new nodeid edit the next line (0x01 - 0x02 etc)
+#define NODE_ADDRESS  5,1,5,5,0x8E,0x01
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
