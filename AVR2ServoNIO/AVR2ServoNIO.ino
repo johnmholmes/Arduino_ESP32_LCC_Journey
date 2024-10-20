@@ -58,7 +58,7 @@ the MERG Arduino CAN shield kit 110.
    Need to do this at least once. (On first setup of any module set to 1 upload and 
   then change to 0 JH)
 */
-#define RESET_TO_FACTORY_DEFAULTS 1 // Set to 0 
+#define RESET_TO_FACTORY_DEFAULTS 0 // Set to 0 
 
 // User defs
 #define NUM_SERVOS 2
@@ -192,8 +192,8 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 
 #define OLCB_NO_BLUE_GOLD
 #ifndef OLCB_NO_BLUE_GOLD
-    #define BLUE 40  // built-in blue LED
-    #define GOLD 39  // built-in green LED
+    #define BLUE 8  // built-in blue LED
+    #define GOLD 9  // built-in green LED
     ButtonLed blue(BLUE, LOW);
     ButtonLed gold(GOLD, LOW);
     
