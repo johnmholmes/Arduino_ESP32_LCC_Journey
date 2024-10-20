@@ -52,11 +52,11 @@ the MERG Arduino shield kit 110.
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line (0x01 - 0x02 etc)
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x04
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x06
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
 
 // User defs
 #define NUM_SERVOS 2
@@ -376,9 +376,9 @@ void setup()
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
 
   // for testing
-  NODECONFIG.write( EEADDR(io[0].type), 5);      // output
-  NODECONFIG.write( EEADDR(io[0].duration), 5 ); // 500ms pulse
-  NODECONFIG.write( EEADDR(io[0].period), 10);   // every second
+  //NODECONFIG.write( EEADDR(io[0].type), 5);      // output
+  //NODECONFIG.write( EEADDR(io[0].duration), 5 ); // 500ms pulse
+  //NODECONFIG.write( EEADDR(io[0].period), 10);   // every second
   
 }
 
