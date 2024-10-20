@@ -1,8 +1,8 @@
 /*
-This is my test version for demonstration only John Holmes
+This is my test version for demonstration use only by John Holmes
 
 The original sketch is being updated by David Harris the pins in that example may change to suit
-the MERG Arduino shield kit 110.
+the MERG Arduino CAN shield kit 110.
 
   - Pin 3 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
@@ -51,12 +51,14 @@ the MERG Arduino shield kit 110.
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
-// To set a new nodeid edit the next line (0x01 - 0x02 etc)
+// To set a new nodeid edit the next line (0x01 - 0x02 etc JH)
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x06
 
-// To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
-// Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+/* To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
+   Need to do this at least once. (On first setup of any module set to 1 upload and 
+  then change to 0 JH)
+*/
+#define RESET_TO_FACTORY_DEFAULTS 1 // Set to 0 
 
 // User defs
 #define NUM_SERVOS 2
@@ -375,7 +377,7 @@ void setup()
   setupPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
 
-  // for testing
+  // for testing (to be deleted from final release JH)
   //NODECONFIG.write( EEADDR(io[0].type), 5);      // output
   //NODECONFIG.write( EEADDR(io[0].duration), 5 ); // 500ms pulse
   //NODECONFIG.write( EEADDR(io[0].period), 10);   // every second
