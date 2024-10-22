@@ -5,3 +5,5 @@
 - I will be using the Wiki feature rather than the readme file, so please click on the tab to open it.
 
 ### The current test sketch is added but this is still a work in progress.
+
+## The Arduino Nano and the MCP2515 are being pushed to there limits and may not be the best hardware to use!
