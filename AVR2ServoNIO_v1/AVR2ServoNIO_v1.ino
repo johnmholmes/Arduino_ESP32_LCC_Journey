@@ -45,20 +45,20 @@ the MERG Arduino CAN shield kit 110.
 
 #include <Wire.h>
 
-// Board definitions
-#define MANU "OpenLCB"      // The manufacturer of node
-#define MODEL "AVR2ServoNIO"   // The model of the board
-#define HWVERSION "0.1"     // Hardware version
-#define SWVERSION "0.1"     // Software version
-
 // To set a new nodeid edit the next line (0x01 - 0x02 etc JH)
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x9
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
 
 /* To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
    Need to do this at least once. (On first setup of any module set to 1 upload and 
   then change to 0 JH)
 */
-#define RESET_TO_FACTORY_DEFAULTS 0 // Set to 0 
+#define RESET_TO_FACTORY_DEFAULTS 1 // Set to 0 
+
+// Board definitions
+#define MANU "OpenLCB"      // The manufacturer of node
+#define MODEL "AVR2ServoNIO"   // The model of the board
+#define HWVERSION "0.1"     // Hardware version
+#define SWVERSION "0.1"     // Software version
 
 // User defs
 #define NUM_SERVOS 2
@@ -287,26 +287,11 @@ void servoProcess() {
     if(servoTarget[i] > servoActual[i] ) {
       dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       servo[i].write(servoActual[i]++);
-      /*
-      if((servoTarget[i]-servoActual[i])<10) 
-        servo[i].write(servoActual[i]++);
-      else {
-        servoActual[i] += 5;
-        servo[i].write(servoActual[i]);
-      }
-      */
+      
     } else if(servoTarget[i] < servoActual[i] ) {
       dP("\nservo<"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       servo[i].write(servoActual[i]--);
-      /*
-      if((servoActual[i]-servoTarget[i])<10) 
-        servo[i].write(servoActual[i]--);
-      else {
-        servoActual[i] -= 5;
-        servo[i].write(servoActual[i]);   
       } 
-      */
-    } 
   }
 }
 
@@ -376,12 +361,6 @@ void setup()
   servoSetup();
   setupPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
-
-  // for testing (to be deleted from final release JH)
-  //NODECONFIG.write( EEADDR(io[0].type), 5);      // output
-  //NODECONFIG.write( EEADDR(io[0].duration), 5 ); // 500ms pulse
-  //NODECONFIG.write( EEADDR(io[0].period), 10);   // every second
-  
 }
 
 // ==== Loop ==========================
