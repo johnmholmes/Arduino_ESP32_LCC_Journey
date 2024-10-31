@@ -8,6 +8,6 @@
 
 ## The Arduino Nano and the MCP2515 are being pushed to there limits and may not be the best hardware to use!
 
-## 23/10/24 Update
+## 31/10/24
 
-I have now downloaded the JMRI test release 5.9.5 and this has an improvement that helps with this sketch version
+### The NO CAN example is broken at the moment please be patient we are working on this
