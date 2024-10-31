@@ -52,7 +52,7 @@ the MERG Arduino CAN shield kit 110.
    Need to do this at least once. (On first setup of any module set to 1 upload and 
   then change to 0 JH)
 */
-#define RESET_TO_FACTORY_DEFAULTS 1 // Set to 0 
+#define RESET_TO_FACTORY_DEFAULTS 0 // Set to 0 
 
 // Board definitions
 #define MANU "OpenLCB"      // The manufacturer of node
@@ -213,7 +213,7 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {13,4,5,6,A0,A1,A2,A3}; // use pin 13 LED for demo purposes
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // use pin 13 LED for demo purposes
 #else
   uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // use free pins on MERG CAN board
 #endif
