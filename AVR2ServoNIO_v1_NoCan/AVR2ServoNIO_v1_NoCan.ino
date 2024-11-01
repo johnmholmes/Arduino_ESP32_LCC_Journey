@@ -14,8 +14,9 @@ the MERG Arduino CAN shield kit 110.
   - Pins A4 & A5 are the servo pins
 
 */
+
 //==============================================================
-// AVR 2Servos NIO John's version
+// AVR 2Servos NIO
 //
 // Coprright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
@@ -36,7 +37,6 @@ the MERG Arduino CAN shield kit 110.
 //==============================================================
 
 // Debugging -- uncomment to activate debugging statements:
-
 //#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
@@ -45,20 +45,18 @@ the MERG Arduino CAN shield kit 110.
 
 #include <Wire.h>
 
-// To set a new nodeid edit the next line (0x01 - 0x02 etc JH)
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
-
-/* To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
-   Need to do this at least once. (On first setup of any module set to 1 upload and 
-  then change to 0 JH)
-*/
-#define RESET_TO_FACTORY_DEFAULTS 0 // Set to 0 
-
 // Board definitions
 #define MANU "OpenLCB"      // The manufacturer of node
 #define MODEL "AVR2ServoNIO"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
+
+// To set a new nodeid edit the next line
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x02
+
+// To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
+// Need to do this at least once.
+#define RESET_TO_FACTORY_DEFAULTS 0
 
 // User defs
 #define NUM_SERVOS 2
@@ -192,8 +190,8 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 
 #define OLCB_NO_BLUE_GOLD
 #ifndef OLCB_NO_BLUE_GOLD
-    #define BLUE 8  // built-in blue LED
-    #define GOLD 9  // built-in green LED
+    #define BLUE 40  // built-in blue LED
+    #define GOLD 39  // built-in green LED
     ButtonLed blue(BLUE, LOW);
     ButtonLed gold(GOLD, LOW);
     
@@ -213,7 +211,7 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // use pin 13 LED for demo purposes
+  uint8_t iopin[NUM_IO] = {4,5,6,9,A0,A1,A2,A3}; // use pin 13 LED for demo purposes
 #else
   uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // use free pins on MERG CAN board
 #endif
@@ -243,7 +241,7 @@ void userInitAll()
 }
 
 // ===== Process Consumer-eventIDs =====
-void pceCallback(unsigned int index) {
+void pceCallback(uint16_t index) {
 // Invoked when an event is consumed; drive pins as needed
 // from index of all events.
 // Sample code uses inverse of low bit of pattern to drive pin all on or all off.
@@ -287,11 +285,26 @@ void servoProcess() {
     if(servoTarget[i] > servoActual[i] ) {
       dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       servo[i].write(servoActual[i]++);
-      
+      /*
+      if((servoTarget[i]-servoActual[i])<10) 
+        servo[i].write(servoActual[i]++);
+      else {
+        servoActual[i] += 5;
+        servo[i].write(servoActual[i]);
+      }
+      */
     } else if(servoTarget[i] < servoActual[i] ) {
       dP("\nservo<"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       servo[i].write(servoActual[i]--);
+      /*
+      if((servoActual[i]-servoTarget[i])<10) 
+        servo[i].write(servoActual[i]--);
+      else {
+        servoActual[i] -= 5;
+        servo[i].write(servoActual[i]);   
       } 
+      */
+    } 
   }
 }
 
@@ -304,13 +317,12 @@ void produceFromInputs() {
     static uint8_t c = 0;
     static unsigned long last = 0;
     if((millis()-last)<(50/NUM_IO)) return;
-    last = millis();
     uint8_t t = NODECONFIG.read(EEADDR(io[c].type));
-    if(t>0 && t<5) {
+    if(t==1 || t==2) {
       bool s = digitalRead(iopin[c]);
-      if(s != iostate[c]) {
+      if(s^iostate[c]) {
         iostate[c] = s;
-        OpenLcb.produce(base+c*2 + (!s^(t&1)) );
+        OpenLcb.produce(base+c*2+s);
       }
     }
     if(++c>NUM_IO) c = 0;
@@ -324,7 +336,7 @@ void userHardReset() {}
 // Callback from a Configuration write
 // Use this to detect changes in the ndde's configuration
 // This may be useful to take immediate action on a change.
-void userConfigWritten(unsigned int address, unsigned int length, unsigned int func)
+void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
 {
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
@@ -361,6 +373,12 @@ void setup()
   servoSetup();
   setupPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
+
+  // for testing
+  //NODECONFIG.write( EEADDR(io[0].type), 5);      // output
+  //NODECONFIG.write( EEADDR(io[0].duration), 5 ); // 500ms pulse
+  //NODECONFIG.write( EEADDR(io[0].period), 10);   // every second
+  
 }
 
 // ==== Loop ==========================

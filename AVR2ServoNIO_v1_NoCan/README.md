@@ -1,8 +1,9 @@
-# AVR 8Servo Example
+# AVR 2-Servo N-IO Example
 
 This sketch was written for a Nano or other ATMega328.  
 However, any AVR, with an appropriate  MCP2515 based CAN board, can be used.  
-Here is an example [CAN board](https://www.amazon.ca/Comidox-MCP2515-Receiver-Controller-Development/dp/B07J9KZ4L4)
+Here is an example CAN board: 
+  https://www.amazon.ca/Comidox-MCP2515-Receiver-Controller-Development/dp/B07J9KZ4L4
 In addition, direct via USB using GCSerial or connection via Wifi are possible on a ESP32 or Pico-W.  
 
 This sketch implements:
