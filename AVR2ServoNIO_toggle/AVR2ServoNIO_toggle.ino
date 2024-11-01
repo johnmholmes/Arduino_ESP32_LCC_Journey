@@ -43,7 +43,7 @@ the MERG Arduino CAN shield kit 110.
 //==============================================================
 
 // Debugging -- uncomment to activate debugging statements:
-#define DEBUG Serial
+//#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
