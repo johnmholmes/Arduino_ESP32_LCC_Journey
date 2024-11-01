@@ -1,3 +1,20 @@
+/*
+This is my test version for demonstration use only by John Holmes
+
+The original sketch is being updated by David Harris the pins in that example may change to suit
+the MERG Arduino CAN shield kit 110.
+
+  - Pin 3 is used for interrupt
+  - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
+  - Pin 11 SI MOSI (Master Out Slave In)
+  - Pin 12 SO MISO (Master In Slave Out)
+  - Pin 13 SCK (Serial Clock)
+
+  - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
+  - Pins A4 & A5 are the servo pins
+
+*/
+
 //==============================================================
 // AVR 2Servos NIO
 //
@@ -30,7 +47,7 @@
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
-#include "GCSerial.h"
+//#include "GCSerial.h"
 
 #include <Wire.h>
 
@@ -41,11 +58,11 @@
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  2,1,13,0,0,0x77
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x03
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
 #define NUM_SERVOS 2
@@ -204,9 +221,9 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {13,4,5,6,9,A0,A1,A2}; // use pin 13 LED for demo purposes with direct cnx
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // 
 #else
-  uint8_t iopin[NUM_IO] = {3,4,5,6,9,A0,A1,A2};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {4,4,5,7,A0,A1,A2,A3};  // 
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
