@@ -223,7 +223,7 @@ uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
   uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // 
 #else
-  uint8_t iopin[NUM_IO] = {4,4,5,7,A0,A1,A2,A3};  // 
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // 
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
