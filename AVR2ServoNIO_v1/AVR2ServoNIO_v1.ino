@@ -40,7 +40,7 @@ the MERG Arduino CAN shield kit 110.
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
-//#include "GCSerial.h"
+#include "GCSerial.h"
 
 #include <Wire.h>
 
@@ -55,7 +55,7 @@ the MERG Arduino CAN shield kit 110.
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
 
 // User defs
 #define NUM_SERVOS 2
@@ -316,12 +316,13 @@ void produceFromInputs() {
     static uint8_t c = 0;
     static unsigned long last = 0;
     if((millis()-last)<(50/NUM_IO)) return;
+    last = millis();
     uint8_t t = NODECONFIG.read(EEADDR(io[c].type));
-    if(t==1 || t==2) {
+    if(t>0 && t<5) {
       bool s = digitalRead(iopin[c]);
-      if(s^iostate[c]) {
+      if(s != iostate[c]) {
         iostate[c] = s;
-        OpenLcb.produce(base+c*2+s);
+        OpenLcb.produce(base+c*2 + (!s^(t&1)) );
       }
     }
     if(++c>NUM_IO) c = 0;
