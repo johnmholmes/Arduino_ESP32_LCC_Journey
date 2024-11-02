@@ -4,6 +4,8 @@ Page updated 1/11/24
 
 ## The sketches have been updated to ensure they work with the next library full release.
 
+The may be some minor changes required over the next few days as I retest then incase I find any bugs.
+
 
 This repository is used to document my journey into using the Arduino LCC library examples. [here](https://github.com/openlcb/OpenLCB_Single_Thread) Thanks to David Harris for making this possible for me.
 
