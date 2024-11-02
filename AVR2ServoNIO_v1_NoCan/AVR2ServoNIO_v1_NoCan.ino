@@ -55,7 +55,7 @@ the MERG Arduino CAN shield kit 110.
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
 #define NUM_SERVOS 2
@@ -221,7 +221,7 @@ long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2ServosNIO"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2ServosNIO_v1_NoCan"));
   
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
