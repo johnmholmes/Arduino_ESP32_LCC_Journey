@@ -220,14 +220,14 @@ long next[NUM_IO] = {0};
 // This is called to initialize the EEPROM on a new node
 void userInitAll()
 { 
-  NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2ServosNIO"));
+  NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2ServosNIO_v1"));
   
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
-      NODECONFIG.put(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
+      NODECONFIG.put(EEADDR(servos[i].pos[p].angle), 90);
     }
   }
   for(uint8_t i = 0; i < NUM_IO; i++) {
