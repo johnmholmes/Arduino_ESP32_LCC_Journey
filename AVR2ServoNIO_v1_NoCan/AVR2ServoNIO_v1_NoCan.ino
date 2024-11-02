@@ -14,7 +14,6 @@ the MERG Arduino CAN shield kit 110.
   - Pins A4 & A5 are the servo pins
 
 */
-
 //==============================================================
 // AVR 2Servos NIO
 //
@@ -52,7 +51,7 @@ the MERG Arduino CAN shield kit 110.
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x02
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
@@ -211,9 +210,9 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,9,A0,A1,A2,A3}; // use pin 13 LED for demo purposes
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // 
 #else
-  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // 
 #endif
 bool iostate[NUM_IO] = {0};
 long next[NUM_IO] = {0};
@@ -317,12 +316,13 @@ void produceFromInputs() {
     static uint8_t c = 0;
     static unsigned long last = 0;
     if((millis()-last)<(50/NUM_IO)) return;
+    last = millis();
     uint8_t t = NODECONFIG.read(EEADDR(io[c].type));
-    if(t==1 || t==2) {
+    if(t>0 && t<5) {
       bool s = digitalRead(iopin[c]);
-      if(s^iostate[c]) {
+      if(s != iostate[c]) {
         iostate[c] = s;
-        OpenLcb.produce(base+c*2+s);
+        OpenLcb.produce(base+c*2 + (!s^(t&1)) );
       }
     }
     if(++c>NUM_IO) c = 0;
