@@ -14,6 +14,7 @@ the MERG Arduino CAN shield kit 110.
   - Pins A4 & A5 are the servo pins
 
 */
+
 //==============================================================
 // AVR 2Servos NIO
 //
@@ -36,10 +37,12 @@ the MERG Arduino CAN shield kit 110.
 //==============================================================
 
 // Debugging -- uncomment to activate debugging statements:
+    // dP(x) prints x, dPH(x) prints x in hex,
+    //  dPS(string,x) prints string and x
 //#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
-//    ( Note: disable debugging if this is chosen. )
+//   Note: disable debugging if this is chosen
 #include "GCSerial.h"
 
 #include <Wire.h>
@@ -51,7 +54,7 @@ the MERG Arduino CAN shield kit 110.
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
+#define NODE_ADDRESS  5,1,1,,0x8E,0x01
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
@@ -209,11 +212,7 @@ uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
-#ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // 
-#else
-  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // 
-#endif
+uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};
 bool iostate[NUM_IO] = {0};
 long next[NUM_IO] = {0};
 
@@ -221,7 +220,7 @@ long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO_v1_NoCan"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO_NoCan"));
   
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
@@ -240,7 +239,7 @@ void userInitAll()
 }
 
 // ===== Process Consumer-eventIDs =====
-void pceCallback(uint16_t index) {
+void pceCallback(unsigned int index) {
 // Invoked when an event is consumed; drive pins as needed
 // from index of all events.
 // Sample code uses inverse of low bit of pattern to drive pin all on or all off.
@@ -309,23 +308,23 @@ void servoProcess() {
 
 // ==== Process Inputs ====
 void produceFromInputs() {
-    // called from loop(), this looks at changes in input pins and
-    // and decides which events to fire
-    // with pce.produce(i);
-    const uint8_t base = NUM_SERVOS*NUM_POS;
-    static uint8_t c = 0;
-    static unsigned long last = 0;
-    if((millis()-last)<(50/NUM_IO)) return;
-    last = millis();
-    uint8_t t = NODECONFIG.read(EEADDR(io[c].type));
-    if(t>0 && t<5) {
-      bool s = digitalRead(iopin[c]);
-      if(s != iostate[c]) {
-        iostate[c] = s;
-        OpenLcb.produce(base+c*2 + (!s^(t&1)) );
-      }
-    }
-    if(++c>NUM_IO) c = 0;
+// called from loop(), this looks at changes in input pins and
+// and decides which events to fire
+// with pce.produce(i);
+const uint8_t base = NUM_SERVOS*NUM_POS;
+static uint8_t c = 0;
+static unsigned long last = 0;
+if((millis()-last)<(50/NUM_IO)) return;
+last = millis();
+uint8_t t = NODECONFIG.read(EEADDR(io[c].type));
+if(t>0 && t<5) {
+bool s = digitalRead(iopin[c]);
+if(s != iostate[c]) {
+iostate[c] = s;
+OpenLcb.produce(base+c*2 + (!s^(t&1)) );
+}
+}
+if(++c>NUM_IO) c = 0;
 }
 
 void userSoftReset() {}
@@ -336,7 +335,7 @@ void userHardReset() {}
 // Callback from a Configuration write
 // Use this to detect changes in the ndde's configuration
 // This may be useful to take immediate action on a change.
-void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
+void userConfigWritten(unsigned int address, unsigned int length, unsigned int func)
 {
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
@@ -361,7 +360,7 @@ void setup()
     delay(1000);
     Serial.begin(115200);
     delay(1000);
-    dP("\n AVR-2Servo14IO");
+    dP("\n AVR-2Servo8IO");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
