@@ -1,10 +1,10 @@
 # Arduino_LCC_Journey
 
-Page updated 2/11/24
+Page updated 3/11/24
 
-## The sketches have been updated to ensure they work with the next library full release. you need to download the master library file and overwrite the previous downloaded version.
+## We have an issue with the examples at the momment with some changes we have made in the last week has broken the Can side of things. We hope to have an update in the next day or two.
 
-The main sketch I have been showing will need to be over written again as it had a bug which was not fixed in version 0.1.1 This will be addressed in a future release. As David has already added it to his master release on GitHUB.
+
 ----
 
 ## The Arduino Nano and the MCP2515 are being pushed to there limits and may not be the best hardware to use!
