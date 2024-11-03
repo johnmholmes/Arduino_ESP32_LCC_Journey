@@ -47,7 +47,7 @@ the MERG Arduino CAN shield kit 110.
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
-//#include "GCSerial.h"
+#include "GCSerial.h"
 
 #include <Wire.h>
 
