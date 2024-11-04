@@ -2,7 +2,7 @@
 
 Page updated 4/11/24
 
-## We have an issue with the examples at the moment, with some changes we have made in the last week. Which has broken the Can side of things. 
+## We have an issue with the examples at the moment, with some changes we have made in the last week. Which has broken some of the examples. 
 
 - If you are using version 0.1.0 the two example files will compile now. AVR2ServoNIO & AVR2ServoNIO_NoCan
 
