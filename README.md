@@ -6,13 +6,12 @@ Page updated 4/11/24
 
 - If you are using version 0.1.0 the two example files will compile now. AVR2ServoNIO & AVR2ServoNIO_NoCan
 
-
-
 ----
 
 ## The Arduino Nano and the MCP2515 are being pushed to there limits and may not be the best hardware to use!
 
-The may be some minor changes required over the next few days as I retest then incase I find any bugs.
+- As David developes the Libraries we may end up with some new bugs. It is important to understand he his doing this so people can use various different MCU and Can modules.
+- My goal is to present a selection of examples dedicated to just 1 MCU and 1 Type of Can module.
 
 
 This repository is used to document my journey into using the Arduino LCC library examples. [here](https://github.com/openlcb/OpenLCB_Single_Thread) Thanks to David Harris for making this possible for me.
