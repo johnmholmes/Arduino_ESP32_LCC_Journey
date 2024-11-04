@@ -1,4 +1,4 @@
-# Arduino_LCC_Journey
+# Arduino LCC Journey
 
 Page updated 4/11/24
 
