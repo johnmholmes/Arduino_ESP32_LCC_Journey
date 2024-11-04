@@ -1,11 +1,11 @@
 # Arduino_LCC_Journey
 
-Page updated 3/11/24
+Page updated 4/11/24
 
 ## We have an issue with the examples at the moment with some changes we have made in the last week has broken the Can side of things. We hope to have an update in the next day or two.
 
-- If you are using version 0.1.0 neither of the example files will compile now.
-- If you download the latest version from David's repository they will compile, But we now see another issue The Can side of things does not show up in JMRI.
+- If you are using version 0.1.0 the two example files will compile now. AVR2ServoNIO & AVR2ServoNIO_NoCan
+
 
 
 ----
