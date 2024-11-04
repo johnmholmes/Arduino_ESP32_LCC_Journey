@@ -54,7 +54,7 @@ the MERG Arduino CAN shield kit 110.
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,,0x8E,0x01
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
