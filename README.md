@@ -12,9 +12,8 @@ Page updated 5/11/24
 
 ## The Arduino Nano and the MCP2515 are being pushed to there limits and may not be the best hardware to use!
 
-- As David developes the Libraries we may end up with some new bugs. It is important to understand he his doing this so people can use various different MCU and Can modules.
 - My goal is to present a selection of examples dedicated to just 1 MCU and 1 Type of Can module.
-
+----
 
 This repository is used to document my journey into using the Arduino LCC library examples. [here](https://github.com/openlcb/OpenLCB_Single_Thread) Thanks to David Harris for making this possible for me.
 
@@ -22,7 +21,11 @@ This repository is used to document my journey into using the Arduino LCC librar
 - Also we can use the example to create stand alone animation modules using just a USB lead.
 - I will be using the Wiki feature rather than the readme file, so please click on the tab to open it.
 
-### The current test sketch is added but this is still a work in progress.
+----
+
+### Different examples folders
+
+- I will break down the folder structure so you know which version of the library release it will work with, without having to make any major changes to the sketch.
 
 
 
