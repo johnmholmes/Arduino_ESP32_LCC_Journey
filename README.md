@@ -18,7 +18,7 @@ Page updated 5/11/24
 
 ----
 
-This repository is used to document my journey into using David's Arduino LCC library examples. [here](https://github.com/openlcb/OpenLCB_Single_Thread) Thanks to David Harris for making this possible for me.
+## This repository is used to document my journey into using David's Arduino LCC library examples. [here](https://github.com/openlcb/OpenLCB_Single_Thread) Thanks to David Harris for making this possible for me.
 
 - All credit goes to the library creators who have also helped me to get this going on an Arduino Nano using the MCP2515 modules, and use the MERG CANUSB4 to interface it with JMRI.
 - Also we can use the example to create stand alone animation modules using just a USB lead.
