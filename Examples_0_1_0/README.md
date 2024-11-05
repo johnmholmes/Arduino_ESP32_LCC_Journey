@@ -1,6 +1,6 @@
 # Arduino Nano Example
 
-This sketch was written for a Nano or other ATMega328.  
+This sketch was written for a Nano.
 
 This sketch implements:
 * two servos, each with three positions
