@@ -26,7 +26,7 @@ Page updated 5/11/24
 
 ----
 
-### Different examples folders
+## Different examples folders
 
 - I will break down the folder structure so you know which version of the library release it will work with, without having to make any major changes to the sketch.
 
