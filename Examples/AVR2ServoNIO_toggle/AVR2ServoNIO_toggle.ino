@@ -1,5 +1,5 @@
 /*
-This sketch requires you to install the ACAN library for it to compile
+This sketch requires you to install the ACAN2515 library for it to compile
 
 This is my test version for demonstration use only by John Holmes
 
