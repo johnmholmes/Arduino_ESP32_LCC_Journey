@@ -2,6 +2,10 @@
 
 ## Page updated 6/11/24
 
+## Sketch AVR2ServoINO will only work with Verion 0.1.0 at the moment we are looking into this for a bug fix for later later library version.
+
+----
+
 ## As we develop sketches and the main library progresses through official releases, some sketches maybe affected. It's important to note that David's library is designed to support a variety of different MCUs, CAN modules, and communication protocols.
 
 - This repository will primarily focus on the Arduino Nano and Mega families of boards, as well as the MCP2515 CAN module.
