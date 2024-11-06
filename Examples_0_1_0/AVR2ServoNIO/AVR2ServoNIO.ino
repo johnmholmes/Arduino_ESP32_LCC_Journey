@@ -43,7 +43,7 @@ the MERG Arduino CAN shield kit 110.
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //   Note: disable debugging if this is chosen
-#include "GCSerial.h"
+//#include "GCSerial.h"
 
 #include <Wire.h>
 
@@ -54,11 +54,11 @@ the MERG Arduino CAN shield kit 110.
 #define SWVERSION "0.1"     // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x02
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
 
 // User defs
 #define NUM_SERVOS 2
@@ -220,7 +220,7 @@ long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO_NoCan"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO_Can"));
   
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
@@ -335,7 +335,7 @@ void userHardReset() {}
 // Callback from a Configuration write
 // Use this to detect changes in the ndde's configuration
 // This may be useful to take immediate action on a change.
-void userConfigWritten(unsigned int address, unsigned int length, unsigned int func)
+void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
 {
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
