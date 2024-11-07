@@ -1,8 +1,10 @@
 # Arduino LCC Journey
 
-## Page updated 6/11/24
+## Page updated 7/11/24
 
-## Sketch AVR2ServoINO will only work with Verion 0.1.0 at the moment we are looking into this for a bug fix for later later library version.
+----
+
+## Sketch AVR2ServoINO CAN version will only work with Verion 0.1.0 at the moment we are looking into this for a bug fix for later library version.
 
 ----
 
