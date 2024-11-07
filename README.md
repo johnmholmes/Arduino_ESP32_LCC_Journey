@@ -32,9 +32,11 @@
 
 ----
 
-## Different examples folders
+## Version 0.1.4
 
-- I will break down the folder structure so you know which version of the library release it will work with, without having to make any major changes to the sketch.
+This was released 7/11/2024, and has 3 versions of the AVR2ServoNIO sketch The next release will drop this down to one version. Which will make it simplier for me to document the journey. I have already added the latest version into my repository. If in the future we come up with more features that could be used on the Arduino Nano, I will then update the repsitory.
+
+
 
 
 
