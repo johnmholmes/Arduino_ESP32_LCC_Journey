@@ -225,7 +225,7 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // use pin 13 LED for demo purposes with direct cnx
+  uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3}; // change pin 4 to pin 13 LED for demo purposes with direct cnx
 #else
   uint8_t iopin[NUM_IO] = {4,5,6,7,A0,A1,A2,A3};  // use free pins on MERG CAN board
 #endif
