@@ -1,13 +1,19 @@
-# Arduino Nano Example
+# AVR 2-Servo N-IO Example, with toggle and ACan class
 
-This sketch was written for a Nano.
+This sketch was written for a Nano or other ATMega328.  
+However, any AVR, with an appropriate  MCP2515 based CAN board, can be used.  
+Here is an example CAN board: 
+  https://www.amazon.ca/Comidox-MCP2515-Receiver-Controller-Development/dp/B07J9KZ4L4
+In addition, direct via USB using GCSerial or connection via Wifi are possible on a ESP32 or Pico-W.  
 
 This sketch implements:
 * two servos, each with three positions
-   Positions can be set to angles 0-180
-   
-* The i/o channels, each of which can be an input or an output,
-   If an output it may be solid, pulse or flashing. 
+   Positions cabe set to angles 0-180
+   The 0 and 180 end-points of the servos can be configured.
+* N i/o channels, each of which can be an input or an output,
+   If an output it may be solid, pulse or flashing, and consumes an on- and 0ff-event. 
+   If an input it produces an on- and off-event, which may each be delayed.  The 
+     inputs can be with or with pullups, inverted or not, or can be toggle. 
 
 It demonstrates: 
 * CDI
@@ -17,12 +23,12 @@ It demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
-This is my test version for demonstration use only by John Holmes
-  - Pin 3 is used for interrupt
-  - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
-  - Pin 11 SI MOSI (Master Out Slave In)
-  - Pin 12 SO MISO (Master In Slave Out)
-  - Pin 13 SCK (Serial Clock)
+This sketch is configured to use the ACAN2515 library and the ACan class.
+This lets one set teh clock frequency of the attached MCP2515, and also its CS and INT pins.  
 
-  - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
-  - Pins A4 & A5 are the servo pins
+This sketch will run on the AVR Mega, ESP32, Pico, and Tiva processor boards.  These 
+all have more memory and the sketches capabilities could be extended.  
+
+Pin usage will need to be adapted to the board. Sample pin usage is included for the Nano. 
+
+
