@@ -4,15 +4,13 @@
 
 ----
 
-## Sketch AVR2ServoINO CAN version will only work with Verion 0.1.0 at the moment we are looking into this for a bug fix for later library version.
+## Sketch AVR2ServoINO CAN version will only work if you change over the interrupt from pin 3 to pin 2 on the Arduino Nano.
 
 ----
 
-## As we develop sketches and the main library progresses through official releases, some sketches maybe affected. It's important to note that David's library is designed to support a variety of different MCUs, CAN modules, and communication protocols.
+## We are looking at just have one version of this sketch in the next full release.
 
 - This repository will primarily focus on the Arduino Nano and Mega families of boards, as well as the MCP2515 CAN module.
-
-- If you are using version 0.1.0 the two example files will compile now. AVR2ServoNIO & AVR2ServoNIO_NoCan see the folder marked Examples_0_1_0 .
 
 ----
 
