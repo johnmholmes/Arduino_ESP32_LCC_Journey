@@ -1,6 +1,6 @@
 # Arduino Nano LCC Journey
 
-## Page updated 8/11/24
+## Page updated 9/11/24
 
 ----
 
