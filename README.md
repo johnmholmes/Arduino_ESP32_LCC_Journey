@@ -1,6 +1,6 @@
 # Arduino Nano LCC Journey
 
-## Page updated 7/11/24
+## Page updated 8/11/24
 
 ----
 
@@ -8,7 +8,7 @@
 
 ----
 
-## We are looking at just have one version of this sketch in the next full release.
+## We are looking at just having one version of AVR2ServoNIO sketch in the next full release.
 
 - This repository will primarily focus on the Arduino Nano and Mega families of boards, as well as the MCP2515 CAN module.
 
