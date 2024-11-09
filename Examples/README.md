@@ -1,6 +1,6 @@
 # Arduino Nano Example
 
-This sketch was written for a Nano.
+These sketches are written for an Arduino Nano but may work for other MCUs but I have only tested them with the Nano.
 
 This sketch implements:
 * two servos, each with three positions
@@ -26,3 +26,8 @@ This is my test version for demonstration use only by John Holmes
 
   - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
   - Pins A4 & A5 are the servo pins
+
+AVR4Servo8IO use the pins in a different order
+  - Pins 4,5,6,7,8,9,A0,A1 I/O
+  - Pins A2,A3,A4,A5 servos
+You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
