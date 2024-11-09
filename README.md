@@ -26,7 +26,7 @@
 
 - All credit goes to the library creators who have also helped me to get this going on an Arduino Nano using the MCP2515 modules, and use the MERG CANUSB4 to interface it with JMRI.
 - Also we can use the example to create stand alone animation modules using just a USB lead.
-- I will be using the Wiki feature rather than the readme file, so please click on the tab to open it.
+- I will be using the Wiki feature rather than the readme file, so please click on the Wiki tab to open it.
 
 ----
 
