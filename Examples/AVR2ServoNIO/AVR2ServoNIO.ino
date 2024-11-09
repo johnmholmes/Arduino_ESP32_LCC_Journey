@@ -22,14 +22,14 @@ the MERG Arduino CAN shield kit 110.
 // derived from work by Alex Shepherd and David Harris
 // 
 //==============================================================
-// - 2 Servo channels, each wirh 
+// - 2 Servo channels, each with 
 //     - three settable positions
 //     - three set position events 
 // - N input/output channels:
 //     - type: 0=None, 
 //             1=Input, 2=Input inverted, 
 //             3=Input with pull-up, 4=Input with pull-up inverted, 
-//             5=Input toggle, 6=Toggle with oull-up
+//             5=Input toggle, 6=Toggle with pull-up
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
