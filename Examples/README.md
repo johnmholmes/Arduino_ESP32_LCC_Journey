@@ -17,7 +17,7 @@ It demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
-This is my test version for demonstration use only by John Holmes
+### AVR2ServoNIO Sketch
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
   - Pin 11 SI MOSI (Master Out Slave In)
@@ -27,7 +27,7 @@ This is my test version for demonstration use only by John Holmes
   - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
   - Pins A4 & A5 are the servo pins
 
-AVR4Servo8IO use the pins in a different order
+### AVR4Servo8IO use the pins in a different order
   - Pins 4,5,6,7,8,9,A0,A1 I/O
   - Pins A2,A3,A4,A5 servos
 You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
