@@ -11,6 +11,7 @@
 ## We are looking at just having one version of AVR2ServoNIO sketch in the next full release.
 
 - This repository will primarily focus on the Arduino Nano and Mega families of boards, as well as the MCP2515 CAN module.
+- I have just added a second sketch for 4 servos and 8 I/O building on Davids library version 0.1.4
 
 ----
 
