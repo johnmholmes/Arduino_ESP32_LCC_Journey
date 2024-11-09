@@ -4,7 +4,7 @@ This is my test version for demonstration use only by John Holmes
 The original sketch is being updated by David Harris the pins in that example may change to suit
 the MERG Arduino CAN shield kit 110.
 
-  - Pin 3 is used for interrupt
+  - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
   - Pin 11 SI MOSI (Master Out Slave In)
   - Pin 12 SO MISO (Master In Slave Out)
