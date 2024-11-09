@@ -18,7 +18,7 @@ It demonstrates:
 * Sampling of inputs and producing events.
 
 This is my test version for demonstration use only by John Holmes
-  - Pin 3 is used for interrupt
+  - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
   - Pin 11 SI MOSI (Master Out Slave In)
   - Pin 12 SO MISO (Master In Slave Out)
