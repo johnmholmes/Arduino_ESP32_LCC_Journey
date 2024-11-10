@@ -7,7 +7,9 @@ This sketches implements:
    Positions can be set to angles 0-180
    
 * The 8 i/o channels, each of which can be an input or an output,
-   If an output it may be solid, pulse or flashing. 
+   If an output it may be solid, pulse or flashing.
+
+* It now supports toggle for the input channels
 
 It demonstrates: 
 * CDI
