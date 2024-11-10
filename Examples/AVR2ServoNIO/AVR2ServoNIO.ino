@@ -304,12 +304,13 @@ void servoProcess() {
   for(int i=0; i<NUM_SERVOS; i++) {
     if(servoTarget[i] > servoActual[i] ) {
       dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
+      if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]++);
     } else if(servoTarget[i] < servoActual[i] ) {
       dP("\nservo<"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
+      if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]--);
-    } else if(servo[i].attached()) servo[i].detach(); 
-  }
+    } else if(servo[i].attached()) servo[i].detach();
 }
 
 // ==== Process Inputs ====
