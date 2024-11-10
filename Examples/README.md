@@ -2,11 +2,11 @@
 
 These sketches are written for an Arduino Nano but may work for other MCUs but I have only tested them with the Nano.
 
-This sketch implements:
-* two servos, each with three positions
+This sketches implements:
+* two / four servos, each with three positions
    Positions can be set to angles 0-180
    
-* The i/o channels, each of which can be an input or an output,
+* The 8 i/o channels, each of which can be an input or an output,
    If an output it may be solid, pulse or flashing. 
 
 It demonstrates: 
