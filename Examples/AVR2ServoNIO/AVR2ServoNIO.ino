@@ -311,6 +311,7 @@ void servoProcess() {
       if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]--);
     } else if(servo[i].attached()) servo[i].detach();
+  }
 }
 
 // ==== Process Inputs ====
