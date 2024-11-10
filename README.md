@@ -1,6 +1,9 @@
 # Arduino Nano LCC Journey
 
-## Page updated 9/11/24
+## Page updated 10/11/24
+
+----
+## New sketch added AVR4Servo8IO This builds on the previous example and works well in testing.
 
 ----
 
