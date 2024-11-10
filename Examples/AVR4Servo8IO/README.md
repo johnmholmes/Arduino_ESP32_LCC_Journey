@@ -1,4 +1,4 @@
-# AVR 2-Servo N-IO Example, with toggle
+# AVR 4-Servo 8-IO Example, with toggle
 
 This sketch was written for a Nano or other ATMega328.  
 However, any AVR, with an appropriate  MCP2515 based CAN board, can be used.  
@@ -7,10 +7,10 @@ Here is an example CAN board:
 In addition, direct via USB using GCSerial or connection via Wifi are possible on a ESP32 or Pico-W.  
 
 This sketch implements:
-* two servos, each with three positions
+* Four servos, each with three positions
    Positions cabe set to angles 0-180
    The 0 and 180 end-points of the servos can be configured.
-* N i/o channels, each of which can be an input or an output,
+* Eight i/o channels, each of which can be an input or an output,
    If an output it may be solid, pulse or flashing, and consumes an on- and 0ff-event. 
    If an input it produces an on- and off-event, which may each be delayed.  The 
      inputs can be with or with pullups, inverted or not, or can be toggle. 
