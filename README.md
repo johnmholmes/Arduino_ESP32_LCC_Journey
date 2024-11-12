@@ -3,7 +3,7 @@
 ## Page updated 12/11/24
 
 ----
-We are working on an example for the Arduino Nano to have 13 I/O channels based on the previous sketch.
+## We are working on an example for the Arduino Nano to have 13 I/O channels based on the previous sketch.
 
 ----
 ## New sketch added AVR4Servo8IO this builds on the previous example and works well in testing.
