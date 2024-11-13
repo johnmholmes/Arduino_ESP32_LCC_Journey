@@ -68,7 +68,7 @@ the MERG Arduino CAN shield kit 110.
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
 
 // User defs
 #define NUM_SERVOS 4
@@ -94,8 +94,9 @@ const char configDefInfo[] PROGMEM =
     <group>
         <name>Turnout Servo Configuration</name>
         <int size='1'>
-          <name>Speed 1-255 (delay between steps)</name>
-          <hints><slider tickSpacing='50' immediate='yes'> </slider></hints>
+          <name>Speed 5-50 (delay between steps)</name>
+          <min>5</min><max>50</max>
+          <hints><slider tickSpacing='15' immediate='yes'> </slider></hints>
         </int>
     </group>
     <group replication=')" N(NUM_SERVOS) R"('>
