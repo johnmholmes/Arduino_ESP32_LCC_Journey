@@ -9,8 +9,7 @@
 ## New sketch added AVR4Servo8IO this builds on the previous example and works well in testing.
 
 ----
-
-## Sketch AVR2ServoINO CAN version will only work if you change over the interrupt from pin 3 to pin 2 on the Arduino Nano.
+## Sketch AVR2Servo8IO CAN version will only work if you change over the interrupt from pin 3 to pin 2 on the Arduino Nano.
 
 ----
 
