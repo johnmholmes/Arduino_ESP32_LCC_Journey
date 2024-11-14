@@ -10,6 +10,8 @@ Thes sketches implements:
    If an output it may be solid, pulse or flashing.
 
 * It now supports toggle for the input channels
+  
+* It also now support 13 input & outputs
 
 It demonstrates: 
 * CDI
