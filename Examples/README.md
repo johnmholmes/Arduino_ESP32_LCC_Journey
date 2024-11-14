@@ -19,7 +19,7 @@ It demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
-### Standalone or Canbus netcworked
+### Standalone or Canbus net worked
   - These sketches can be used in various ways as shown in the video series.
 
 ### AVR2ServoNIO Sketch
