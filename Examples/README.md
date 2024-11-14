@@ -30,16 +30,16 @@ It demonstrates:
   - Pins A4 & A5 are the servo pins
 
 ### AVR4Servo8IO use the pins in a different order
-  - Pins 4,5,6,7,8,9,A0,A1 I/O
-  - Pins A2,A3,A4,A5 servos
+  - Pins 4,5,6,7,8,9,A0,A1 are used for input or output
+  - Pins A2,A3,A4,A5 are the servo pins
 You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
 
 ### AVR6Servo6IO use the pins in a different order
-  - Pins 4,5,6,7,8,9
-  - Pins A0,A1 I/OA2,A3,A4,A5 servos
+  - Pins 4,5,6,7,8,9 are used for input or output
+  - Pins A0,A1,A2,A3,A4,A5 are the servo pins
 You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
 
 ### AVRNano13IO use the pins in a different order
-  - Pins 3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5
+  - Pins 3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5 are used for input or output
  
 
