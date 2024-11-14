@@ -33,3 +33,13 @@ It demonstrates:
   - Pins 4,5,6,7,8,9,A0,A1 I/O
   - Pins A2,A3,A4,A5 servos
 You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
+
+### AVR6Servo6IO use the pins in a different order
+  - Pins 4,5,6,7,8,9
+  - Pins A0,A1 I/OA2,A3,A4,A5 servos
+You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
+
+### AVRNano13IO use the pins in a different order
+  - Pins 3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5
+ 
+
