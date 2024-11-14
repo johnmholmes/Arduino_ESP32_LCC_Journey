@@ -19,6 +19,9 @@ It demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
+### Standalone or Canbus netcworked
+  - These sketches can be used in various ways as shown in the video series.
+
 ### AVR2ServoNIO Sketch
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
