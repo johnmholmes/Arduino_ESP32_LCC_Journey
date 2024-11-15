@@ -1,15 +1,11 @@
 # Arduino Nano LCC Journey
 
-## Page updated 12/11/24
+## Page updated 15/11/24
 
 ----
-## We are working on an example for the Arduino Nano to have 13 I/O channels based on the previous sketch.
+## We now have 4 versions of the AVR2ServoNIO sketch 
 
-----
-## New sketch added AVR4Servo8IO this builds on the previous example and works well in testing.
-
-----
-## Sketch AVR2Servo8IO CAN version will only work if you change over the interrupt from pin 3 to pin 2 on the Arduino Nano.
+The main library as produced by David Harris I have now uploaded 4 versions for people to use with an Arduino Nano.
 
 ----
 
