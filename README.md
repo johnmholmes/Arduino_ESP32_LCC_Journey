@@ -30,9 +30,9 @@ The main library as produced by David Harris I have now uploaded 4 versions for 
 
 ----
 
-## Version 0.1.4
+## Version 0.1.5
 
-This was released 7/11/2024, and has 3 versions of the AVR2ServoNIO sketch The next release will drop this down to one version. Which will make it simplier for me to document the journey. I have already added the latest version into my repository. If in the future we come up with more features that could be used on the Arduino Nano, I will then update the repsitory.
+This was released 15/11/2024
 
 
 
