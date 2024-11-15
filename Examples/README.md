@@ -3,10 +3,8 @@
 These sketches are written for an Arduino Nano but may work for other MCUs but I have only tested them with the Nano.
 
 Thes sketches implements:
-* Two / Four / Six servos, each with three positions
-   Positions can be set to angles 0-180
-   
-* They have 8 or 6  i/o channels, each of which can be an input or an output,
+
+* This has 13 i/o channels, each of which can be an input or an output,
    If an output it may be solid, pulse or flashing.
 
 * It now supports toggle for the input channels
