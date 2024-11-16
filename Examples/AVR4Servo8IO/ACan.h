@@ -20,10 +20,10 @@
   #pragma message "Must define ACAN_FREQ, ACAN_CS_PIN, ACAN_INT_PIN"
 #endif
 #ifndef ACAN_RX_NBUF
-  #define ACAN_RX_NBUF 1
+  #define ACAN_RX_NBUF 4
 #endif
 #ifndef ACAN_TX_NBUF
-  #define ACAN_TX_NBUF 1
+  #define ACAN_TX_NBUF 2
 #endif
 
 #pragma message ACan for MCP2515
