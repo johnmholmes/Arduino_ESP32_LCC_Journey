@@ -1,6 +1,6 @@
 # Arduino Nano LCC Journey
 
-## Page updated 15/11/24
+## Page updated 16/11/24
 
 ----
 ## We now have 4 versions of the AVR2ServoNIO sketch 
@@ -9,8 +9,9 @@ The main library as produced by David Harris I have now uploaded 4 versions for 
 
 ----
 
-- This repository will primarily focus on the Arduino Nano and Mega families of boards, as well as the MCP2515 CAN module.
-- I have just added a second sketch for 4 servos and 8 I/O building on Davids library version 0.1.4
+- This repository will primarily focus on the Arduino Nano and Mega boards, as well as the MCP2515 CAN module.
+- We currently have the buffer values set for 4 on the read and 2 on the transmit.
+
 
 ----
 
