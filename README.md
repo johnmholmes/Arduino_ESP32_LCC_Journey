@@ -1,6 +1,12 @@
 # Arduino Nano LCC Journey
 
-## Page updated 17/11/24
+## Page updated 19/11/24
+
+----
+
+## We may have an issue with the GCSerial with the Windows based machines
+
+I am currently unable to use the sketches that worked last week using the USB version. I am trying to work out a fix, once found I will update this repository with the details.
 
 ----
 ## We now have 5 versions of the AVR2ServoNIO sketch 
