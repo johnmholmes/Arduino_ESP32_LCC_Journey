@@ -4,7 +4,7 @@
 
 ----
 
-## We may have an issue with the GCSerial with the Windows based machines
+## We may have an issue with the GCSerial with the Windows 11 based machines
 
 I am currently unable to use the sketches that worked last week using the USB version. I am trying to work out a fix, once found I will update this repository with the details.
 
