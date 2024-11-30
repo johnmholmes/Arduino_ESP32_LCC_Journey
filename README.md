@@ -4,9 +4,9 @@
 
 ----
 
-## Ensure if using the Grid Connect method Baud Rate
+## Ensure if using the Grid Connect method Baud Rate setting in JMRI
 
-After a few weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
+After a two weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
 
 ----
 ## We now have 8 versions of the AVR2ServoNIO sketch 
