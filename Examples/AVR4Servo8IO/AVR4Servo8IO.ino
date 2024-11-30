@@ -396,11 +396,17 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
 // Reinitialize servos to their current positions
 // Called from setup() and after every configuration change
 void servoSetup() {
-  servodelay = NODECONFIG.read( EEADDR(servodelay));
-  for(uint8_t i = 0; i < NUM_SERVOS; i++) {
-    uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-    servo[i].attach(servopin[i]);
-    servoTarget[i] = NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
+  servodelay = NODECONFIG.read(EEADDR(servodelay));
+  PV(servodelay);
+  for (uint8_t i = 0; i < NUM_SERVOS; i++) {
+    // Optional: If EEPROM read is needed for other setup tasks
+    uint8_t cpos = NODECONFIG.read(EEADDR(curpos[i])); 
+    // Attach the servo to the specified pin
+    servo[i].attach(servopin[i]); 
+    // Set servo target to 90 degrees at startup
+    servoTarget[i] = 90;
+    // Move the servo to the initial position
+    servo[i].write(servoTarget[i]);
   }
 }
 
