@@ -1,12 +1,12 @@
 # Arduino Nano LCC Journey
 
-## Page updated 19/11/24
+## Page updated 30 November 2024
 
 ----
 
-## We may have an issue with the GCSerial with the Windows 11 based machines
+## Ensure if using the Grid Connect method Baud Rate
 
-I am currently unable to use the sketches that worked last week using the USB version. I am trying to work out a fix, once found I will update this repository with the details.
+After a few weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
 
 ----
 ## We now have 5 versions of the AVR2ServoNIO sketch 
