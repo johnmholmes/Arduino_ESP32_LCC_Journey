@@ -1,8 +1,5 @@
 /*
-This is my test version for demonstration use only by John Holmes
-
-The original sketch is being updated by David Harris the pins in that example may change to suit
-the MERG Arduino CAN shield kit 110.
+This is my test version for demonstration CAN Bus use only by John Holmes
 
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
@@ -68,7 +65,7 @@ the MERG Arduino CAN shield kit 110.
 
 // To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
 #define NUM_SERVOS 2
