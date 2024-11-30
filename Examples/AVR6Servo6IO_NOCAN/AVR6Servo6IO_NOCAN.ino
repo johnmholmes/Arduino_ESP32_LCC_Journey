@@ -1,5 +1,5 @@
 /*
-This is my test version for demonstration CAN BUS use only by John Holmes
+This is my test version for demonstration NO CAN BUS use only by John Holmes
 
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
@@ -44,13 +44,13 @@ This is my test version for demonstration CAN BUS use only by John Holmes
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
-//#include "GCSerial.h"
+#include "GCSerial.h"
 
 // New ACan for MCP2515
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-#include "ACan.h"            // uses local ACan class, comment out if using GCSerial
+//#include "ACan.h"            // uses local ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
