@@ -4,14 +4,18 @@
 
 ----
 
-## Ensure if using the Grid Connect method Baud Rate
+## Ensure if using the Grid Connect method Baud Rate setting in JMRI
 
-After a few weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
+After a two weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
 
 ----
-## We now have 5 versions of the AVR2ServoNIO sketch 
+## We now have 8 versions of the AVR2ServoNIO sketch 
 
-The main library as produced by David Harris I have now uploaded 5 versions for people to use with an Arduino Nano.
+The main library as produced by David Harris I have now uploaded 8 versions for people to use with an Arduino Nano.
+
+ - These cover Both CAN BUS use and USB use.
+ - We have options for 2,4,6 servos.
+ - We have 13 input or output choices.
 
 ----
 
