@@ -55,8 +55,8 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 #include <Wire.h>
 
 // Board definitions
-#define MANU "OpenLCB"      // The manufacturer of node
-#define MODEL "AVR6Servo6IO"   // The model of the board
+#define MANU "J Holmes"      // The manufacturer of node
+#define MODEL "AVR6Servo6IO_NoCan"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
@@ -232,7 +232,7 @@ unsigned long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("6Servos6IO"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("6Servos6IO_NoCan"));
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
@@ -408,7 +408,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-2Servo14IO");
+    dP("\n AVR-6Servo6IO_NoCAN");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid

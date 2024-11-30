@@ -56,7 +56,7 @@ This is my test version for demonstration CAN BUS use only by John Holmes
 #include <Wire.h>
 
 // Board definitions
-#define MANU "OpenLCB"      // The manufacturer of node
+#define MANU "J Holmes"      // The manufacturer of node
 #define MODEL "AVR4Servo8IO"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
@@ -410,7 +410,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-2Servo14IO");
+    dP("\n AVR-4Servo8IO");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid

@@ -1,5 +1,5 @@
 /*
-This is my test version for demonstration  CN BUS use only by John Holmes
+This is my test version for demonstration  CAN BUS use only by John Holmes
 
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
@@ -55,8 +55,8 @@ This is my test version for demonstration  CN BUS use only by John Holmes
 #include <Wire.h>
 
 // Board definitions
-#define MANU "OpenLCB"      // The manufacturer of node
-#define MODEL "AVR13IO"   // The model of the board
+#define MANU "J Holmes"      // The manufacturer of node
+#define MODEL "AVR13IO_NoCan"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
@@ -322,7 +322,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-2Servo14IO");
+    dP("\n AVR-13IO_NoCan");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
