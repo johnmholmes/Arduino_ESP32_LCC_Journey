@@ -2,15 +2,6 @@
 
 These sketches are written for an Arduino Nano but may work for other MCUs but I have only tested them with the Nano.
 
-Thes sketches implements:
-
-* This has 13 i/o channels, each of which can be an input or an output,
-   If an output it may be solid, pulse or flashing.
-
-* It now supports toggle for the input channels
-  
-* It also now support 13 input & outputs
-
 It demonstrates: 
 * CDI
 * memstruct of EEPROM reflecting the CDI structure
@@ -31,6 +22,8 @@ It demonstrates:
 
   - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
   - Pins A4 & A5 are the servo pins
+
+You must have the arduino powered by a separate power supply other wise you will damage your PC com port.
 
 ### AVR4Servo8IO use the pins in a different order
   - Pins 4,5,6,7,8,9,A0,A1 are used for input or output
