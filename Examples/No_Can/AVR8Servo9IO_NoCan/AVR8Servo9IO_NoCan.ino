@@ -2,19 +2,19 @@
 This is my test version for demonstration NO CAN BUS use only by John Holmes
 
   - Pin 2 is used for interrupt
-  - Pins 3,4,5,6,7,8,9,10,11,12,13 are used for input or output
-  - Pins A0,A1,A2,A3,A4,A5 are used for servos
+  - Pins 5,6,7,8,9,10,11,12,13 are used for input or output
+  - Pins A0,A1,A2,A3,A4,A5,3,4 are used for servos
 
 */
 
 //==============================================================
-// AVR 6Servos 11 IO ACAN with Toggle
+// AVR 8 Servos 9 IO ACAN with Toggle
 //
 // Coprright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
 // 
 //==============================================================
-// - 6 Servo channels, each wirh 
+// - 8 Servo channels, each wirh 
 //     - three settable positions
 //     - three set position events 
 // - N input/output channels:
@@ -51,7 +51,7 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 
 // Board definitions
 #define MANU "J Holmes"      // The manufacturer of node
-#define MODEL "AVR6Servo6IO_NoCan"   // The model of the board
+#define MODEL "AVR8Servo9IO_NoCan"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
@@ -63,9 +63,9 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 #define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
-#define NUM_SERVOS 6
+#define NUM_SERVOS 8
 #define NUM_POS 3
-#define NUM_IO 6
+#define NUM_IO 9
 
 #define NUM_EVENT NUM_SERVOS * NUM_POS + NUM_IO*2
 
@@ -178,9 +178,10 @@ extern "C" {
     
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
-        REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),REG_SERVO_OUTPUT(2), REG_SERVO_OUTPUT(3),REG_SERVO_OUTPUT(4), REG_SERVO_OUTPUT(5),
-        REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5),  
-          
+        REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),REG_SERVO_OUTPUT(2), REG_SERVO_OUTPUT(3),
+        REG_SERVO_OUTPUT(4), REG_SERVO_OUTPUT(5),REG_SERVO_OUTPUT(6), REG_SERVO_OUTPUT(7),
+        REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
+        REG_IO(7), REG_IO(8),  
     };
     
     // SNIP Short node description for use by the Simple Node Information Protocol
@@ -212,12 +213,12 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 #endif // OLCB_NO_BLUE_GOLD
 
 #include <Servo.h>
-Servo servo[6];
+Servo servo[8];
 uint8_t servodelay;
-uint8_t servopin[NUM_SERVOS] = {A0,A1,A2,A3,A4,A5};
+uint8_t servopin[NUM_SERVOS] = {A0,A1,A2,A3,A4,A5,3,4};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
-uint8_t iopin[NUM_IO] = {3,4,5,6,7,8}; // use pin 13 LED for demo purposes with direct cnx
+uint8_t iopin[NUM_IO] = {5,6,7,8,9,10,11,12,13}; // use pin 13 LED for demo purposes with direct cnx
 
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
@@ -227,7 +228,7 @@ unsigned long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("6Servos6IO_NoCan"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("8Servos9IO_NoCan"));
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
@@ -403,7 +404,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-6Servo6IO_NoCAN");
+    dP("\n AVR-8Servo9IO_NoCAN");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
