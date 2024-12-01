@@ -1,6 +1,6 @@
 # Arduino Nano LCC Journey
 
-## Page updated 30 November 2024
+## Page updated 1 December 2024
 
 ----
 
@@ -9,13 +9,13 @@
 After a two weeks of trying to understand why the AVR sketches did nit work, it turned out I had not ensured the Baud rate was set to 115200.
 
 ----
-## We now have 8 versions of the AVR2ServoNIO sketch 
+## We now have many versions of the original AVR2ServoNIO sketch 
 
-The main library as produced by David Harris I have now uploaded 8 versions for people to use with an Arduino Nano.
+The main library as produced by David Harris I have now uploaded more versions for people to use with an Arduino Nano.
 
  - These cover Both CAN BUS use and USB use.
  - We have options for 2,4,6 servos.
- - We have 13 input or output choices.
+ - We have 13 input or output option.
 
 ----
 
