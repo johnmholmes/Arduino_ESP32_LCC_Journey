@@ -2,7 +2,7 @@
 This is my test version for demonstration  CAN BUS use only by John Holmes
 
   - Pin 2 is used for interrupt
-  - Pins 3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5 are used for input or output
+  - Pins 3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3,A4,A5 are used for input or output
   
 */
 
@@ -38,19 +38,19 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
-//#include "GCSerial.h"
+#include "GCSerial.h"
 
 // New ACan for MCP2515
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-#include "ACan.h"            // uses local ACan class, comment out if using GCSerial
+//#include "ACan.h"            // uses local ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
 // Board definitions
 #define MANU "J Holmes"      // The manufacturer of node
-#define MODEL "AVR13IO_NoCan"   // The model of the board
+#define MODEL "AVR17IO_NoCan"   // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
@@ -62,7 +62,7 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 #define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
-#define NUM_IO 13
+#define NUM_IO 17
 
 #define NUM_EVENT NUM_IO*2
 
@@ -146,7 +146,8 @@ extern "C" {
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
         //REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
         REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
-        REG_IO(7), REG_IO(8), REG_IO(9), REG_IO(10), REG_IO(11), REG_IO(12)
+        REG_IO(7), REG_IO(8), REG_IO(9), REG_IO(10), REG_IO(11), REG_IO(12),
+        REG_IO(13), REG_IO(14), REG_IO(15), REG_IO(16)
     };
     
     // SNIP Short node description for use by the Simple Node Information Protocol
@@ -177,7 +178,7 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
     ButtonLed* buttons[13] = { &pA,&pA,&pB,&pB,&pC,&pC,&pD,&pD };
 #endif // OLCB_NO_BLUE_GOLD
 
-uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5};  // use free pins on MERG CAN board
+uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3,A4,A5};  // use free pins on MERG CAN board
 
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
@@ -187,7 +188,7 @@ unsigned long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("13IO"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("17IO"));
   for(uint8_t i = 0; i < NUM_IO; i++) {
     NODECONFIG.put(EEADDR(io[i].desc), ESTRING(""));
     NODECONFIG.write(EEADDR(io[i].type), 0);
@@ -316,7 +317,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-13IO_NoCan");
+    dP("\n AVR-17IO_NoCan");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
