@@ -104,7 +104,7 @@ const char configDefInfo[] PROGMEM =
         <group replication=')" N(NUM_POS) R"('>
             <repname>Position</repname>
             <eventid><name>EventID</name></eventid>
-            <int size='1'>
+            <int size='2'>
                 <name>Servo Position in Degrees</name>
                 <min>0</min><max>180</max>
                 <hints><slider tickSpacing='45' immediate='yes'> </slider></hints>
@@ -160,7 +160,7 @@ const char configDefInfo[] PROGMEM =
             char desc[8];        // description of this Servo Turnout Driver
             struct {
               EventID eid;       // consumer eventID
-              uint8_t angle;       // position
+              uint16_t angle;       // position
             } pos[NUM_POS];
           } servos[NUM_SERVOS];
           struct {
@@ -242,7 +242,7 @@ void userInitAll()
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
       //NODECONFIG.put(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
-      NODECONFIG.put(EEADDR(servos[i].pos[p].angle), 90);
+      NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), 90);
     }
   }
   for(uint8_t i = 0; i < NUM_IO; i++) {
