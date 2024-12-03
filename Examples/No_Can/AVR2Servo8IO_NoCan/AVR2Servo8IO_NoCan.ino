@@ -96,6 +96,7 @@ const char configDefInfo[] PROGMEM =
         <repname>Servo</repname>
         <string size='8'><name>Description</name></string>
         <group replication=')" N(NUM_POS) R"('>
+            <name>  Closed     Midpoint   Thrown</name>
             <repname>Position</repname>
             <eventid><name>EventID</name></eventid>
             <int size='2'>
