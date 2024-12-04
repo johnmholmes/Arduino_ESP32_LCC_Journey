@@ -21,7 +21,7 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 //     - type: 0=None, 
 //             1=Input, 2=Input inverted, 
 //             3=Input with pull-up, 4=Input with pull-up inverted, 
-//             5=Input toggle, 6=Toggle with oull-up
+//             5=Input toggle, 6=Toggle with pull-up
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
