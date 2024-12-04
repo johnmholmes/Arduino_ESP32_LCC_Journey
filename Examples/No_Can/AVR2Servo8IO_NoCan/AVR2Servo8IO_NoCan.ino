@@ -25,7 +25,7 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
-//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 9 means forever
+//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 0 means forever
 //       - Off-period: the period until a repeat pulse
 //     - for Inputs:
 //       - Events are produced
