@@ -409,10 +409,6 @@ void servoSet() {
   }
 }
 
-
-
-
-
 // Setup the io pins
 // called by setup() and after a configuration change
 void setupPins() {
