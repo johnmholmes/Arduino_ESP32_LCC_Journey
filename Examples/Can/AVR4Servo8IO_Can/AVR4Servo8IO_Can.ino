@@ -315,7 +315,6 @@ void servoProcess() {
     } else if(servo[i].attached()) servo[i].detach(); 
   }
 }
-
 // ==== Process Inputs ====
 void produceFromInputs() {
     // called from loop(), this looks at changes in input pins and
