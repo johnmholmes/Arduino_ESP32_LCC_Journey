@@ -409,46 +409,6 @@ void servoSet() {
   }
 }
 
-// ==== Setup does initial configuration ======================
-void setup()
-{
-  #ifdef DEBUG
-    Serial.begin(115200); while(!Serial);
-    delay(500);
-    dP("\n AVR-4Servo8IO_NoCan");
-  #endif
-
-  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
-  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
-  // attach and put servos to last known position
-  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
-  //  servo[i].attach(servopin[i]);
-  servoSetup();
-  setupPins();
-  dP("\n NUM_EVENT="); dP(NUM_EVENT);
-}
-
-// ==== Loop ==========================
-void loop() {
-  bool activity = Olcb_process();
-  #ifndef OLCB_NO_BLUE_GOLD
-    if (activity) {
-      blue.blink(0x1); // blink blue to show that the frame was received
-    }
-    if (olcbcanTx.active) {
-      gold.blink(0x1); // blink gold when a frame sent
-      olcbcanTx.active = false;
-    }
-    // handle the status lights
-    gold.process();
-    blue.process();
-  #endif // OLCB_NO_BLUE_GOLD
-  produceFromInputs();  // scans inputs and generates events on change
-  appProcess();         // processes io pins, eg flashing
-  servoProcess();       // processes servos, moves them to their target
-  processProducer();    // processes delayed producer events from inputs
-}
-
 // Setup the io pins
 // called by setup() and after a configuration change
 void setupPins() {
@@ -509,4 +469,44 @@ void appProcess() {
       }
     }
   }
+}
+
+// ==== Setup does initial configuration ======================
+void setup()
+{
+  #ifdef DEBUG
+    Serial.begin(115200); while(!Serial);
+    delay(500);
+    dP("\n AVR-4Servo8IO_NoCan");
+  #endif
+
+  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
+  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
+  // attach and put servos to last known position
+  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
+  //  servo[i].attach(servopin[i]);
+  servoSetup();
+  setupPins();
+  dP("\n NUM_EVENT="); dP(NUM_EVENT);
+}
+
+// ==== Loop ==========================
+void loop() {
+  bool activity = Olcb_process();
+  #ifndef OLCB_NO_BLUE_GOLD
+    if (activity) {
+      blue.blink(0x1); // blink blue to show that the frame was received
+    }
+    if (olcbcanTx.active) {
+      gold.blink(0x1); // blink gold when a frame sent
+      olcbcanTx.active = false;
+    }
+    // handle the status lights
+    gold.process();
+    blue.process();
+  #endif // OLCB_NO_BLUE_GOLD
+  produceFromInputs();  // scans inputs and generates events on change
+  appProcess();         // processes io pins, eg flashing
+  servoProcess();       // processes servos, moves them to their target
+  processProducer();    // processes delayed producer events from inputs
 }

@@ -24,8 +24,8 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
-//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 9 means forever
-//       - Off-period: the period until a repeat pulse
+//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 0 means forever
+//       - Off-period: the period until a repeat pulse 0 means no repeat
 //     - for Inputs:
 //       - Events are produced
 //       - On-delay: delay before on-event is sent
@@ -309,45 +309,6 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   setupPins();
 }
 
-
-// ==== Setup does initial configuration ======================
-void setup()
-{
-  #ifdef DEBUG
-    Serial.begin(115200); while(!Serial);
-    delay(500);
-    dP("\n AVR-13IO_NoCan");
-  #endif
-
-  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
-  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
-  // attach and put servos to last known position
-  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
-  //  servo[i].attach(servopin[i]);
-  setupPins();
-  dP("\n NUM_EVENT="); dP(NUM_EVENT);
-}
-
-// ==== Loop ==========================
-void loop() {
-  bool activity = Olcb_process();
-  #ifndef OLCB_NO_BLUE_GOLD
-    if (activity) {
-      blue.blink(0x1); // blink blue to show that the frame was received
-    }
-    if (olcbcanTx.active) {
-      gold.blink(0x1); // blink gold when a frame sent
-      olcbcanTx.active = false;
-    }
-    // handle the status lights
-    gold.process();
-    blue.process();
-  #endif // OLCB_NO_BLUE_GOLD
-  produceFromInputs();  // scans inputs and generates events on change
-  appProcess();         // processes io pins, eg flashing
-  processProducer();    // processes delayed producer events from inputs
-}
-
 // Setup the io pins
 // called by setup() and after a configuration change
 void setupPins() {
@@ -408,4 +369,42 @@ void appProcess() {
       }
     }
   }
+}
+
+// ==== Setup does initial configuration ======================
+void setup()
+{
+  #ifdef DEBUG
+    Serial.begin(115200); while(!Serial);
+    delay(500);
+    dP("\n AVR-13IO_NoCan");
+  #endif
+
+  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
+  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
+  // attach and put servos to last known position
+  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
+  //  servo[i].attach(servopin[i]);
+  setupPins();
+  dP("\n NUM_EVENT="); dP(NUM_EVENT);
+}
+
+// ==== Loop ==========================
+void loop() {
+  bool activity = Olcb_process();
+  #ifndef OLCB_NO_BLUE_GOLD
+    if (activity) {
+      blue.blink(0x1); // blink blue to show that the frame was received
+    }
+    if (olcbcanTx.active) {
+      gold.blink(0x1); // blink gold when a frame sent
+      olcbcanTx.active = false;
+    }
+    // handle the status lights
+    gold.process();
+    blue.process();
+  #endif // OLCB_NO_BLUE_GOLD
+  produceFromInputs();  // scans inputs and generates events on change
+  appProcess();         // processes io pins, eg flashing
+  processProducer();    // processes delayed producer events from inputs
 }
