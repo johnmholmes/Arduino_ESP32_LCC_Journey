@@ -19,7 +19,7 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 // derived from work by Alex Shepherd and David Harris
 // 
 //==============================================================
-// - 2 Servo channels, each wirh 
+// - 2 Servo channels, each with 
 //     - three settable positions
 //     - three set position events 
 // - N input/output channels:
@@ -30,8 +30,8 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
-//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 9 means forever
-//       - Off-period: the period until a repeat pulse
+//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 0 means forever
+//       - Off-period: the period until a repeat pulse, 0 means no repeat
 //     - for Inputs:
 //       - Events are produced
 //       - On-delay: delay before on-event is sent
@@ -186,7 +186,7 @@ extern "C" {
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
         REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
         REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
-        REG_IO(7), //REG_IO(8), REG_IO(9), REG_IO(10), REG_IO(11), REG_IO(12), REG_IO(13), 
+        REG_IO(7), 
     };
     
     // SNIP Short node description for use by the Simple Node Information Protocol
@@ -223,8 +223,11 @@ uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
-uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A0,A1}; // use pin 13 LED for demo purposes with direct cnx
-
+#ifdef NOCAN
+  uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A0,A1}; // use pin 13 LED for demo purposes with direct cnx
+#else
+  uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A0,A1};  // use free pins on MERG CAN board
+#endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
@@ -232,13 +235,13 @@ unsigned long next[NUM_IO] = {0};
 // This is called to initialize the EEPROM to Factory Reset
 void userInitAll()
 { 
-  NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR"));
+  NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
   NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO"));
   NODECONFIG.put(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
-      //NODECONFIG.put(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
+      //NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
       NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), 90);
     }
   }
@@ -302,10 +305,12 @@ void servoProcess() {
       dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]++);
+      delay(50);
     } else if(servoTarget[i] < servoActual[i] ) {
       dP("\nservo<"); PV(servodelay); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]); 
       servo[i].write(servoActual[i]--);
+      delay(50);
     } else if(servo[i].attached()) servo[i].detach(); 
   }
 }
@@ -388,59 +393,25 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   dPS(" Len: ", (uint16_t)length);
   dPS(" Func: ", (uint8_t)func);
   setupPins();
-  servoSetup();
+  servoSet();
 }
 
 // Reinitialize servos to their current positions
 // Called from setup() and after every configuration change
 void servoSetup() {
   servodelay = NODECONFIG.read( EEADDR(servodelay));
-  PV(servodelay);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-  //  servo[i].attach(servopin[i]);
     servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
+    servoActual[i] = servoTarget[i];
   }
 }
-
-// ==== Setup does initial configuration ======================
-void setup()
-{
-  #ifdef DEBUG
-    Serial.begin(115200); while(!Serial);
-    delay(500);
-    dP("\n AVR-2Servo8IO");
-  #endif
-
-  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
-  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
-  // attach and put servos to last known position
-  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
-  //  servo[i].attach(servopin[i]);
-  servoSetup();
-  setupPins();
-  dP("\n NUM_EVENT="); dP(NUM_EVENT);
-}
-
-// ==== Loop ==========================
-void loop() {
-  bool activity = Olcb_process();
-  #ifndef OLCB_NO_BLUE_GOLD
-    if (activity) {
-      blue.blink(0x1); // blink blue to show that the frame was received
-    }
-    if (olcbcanTx.active) {
-      gold.blink(0x1); // blink gold when a frame sent
-      olcbcanTx.active = false;
-    }
-    // handle the status lights
-    gold.process();
-    blue.process();
-  #endif // OLCB_NO_BLUE_GOLD
-  produceFromInputs();  // scans inputs and generates events on change
-  appProcess();         // processes io pins, eg flashing
-  servoProcess();       // processes servos, moves them to their target
-  processProducer();    // processes delayed producer events from inputs
+// Allow Servo adjustments
+void servoSet() {
+  for(uint8_t i = 0; i < NUM_SERVOS; i++) {
+    uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
+    servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
+  }
 }
 
 // Setup the io pins
@@ -503,4 +474,44 @@ void appProcess() {
       }
     }
   }
+}
+
+// ==== Setup does initial configuration ======================
+void setup()
+{
+  #ifdef DEBUG
+    Serial.begin(115200); while(!Serial);
+    delay(500);
+    dP("\n AVR-2Servo8IO");
+  #endif
+
+  NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
+  Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
+  // attach and put servos to last known position
+  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
+  //  servo[i].attach(servopin[i]);
+  servoSetup();
+  setupPins();
+  dP("\n NUM_EVENT="); dP(NUM_EVENT);
+}
+
+// ==== Loop ==========================
+void loop() {
+  bool activity = Olcb_process();
+  #ifndef OLCB_NO_BLUE_GOLD
+    if (activity) {
+      blue.blink(0x1); // blink blue to show that the frame was received
+    }
+    if (olcbcanTx.active) {
+      gold.blink(0x1); // blink gold when a frame sent
+      olcbcanTx.active = false;
+    }
+    // handle the status lights
+    gold.process();
+    blue.process();
+  #endif // OLCB_NO_BLUE_GOLD
+  produceFromInputs();  // scans inputs and generates events on change
+  appProcess();         // processes io pins, eg flashing
+  servoProcess();       // processes servos, moves them to their target
+  processProducer();    // processes delayed producer events from inputs
 }
