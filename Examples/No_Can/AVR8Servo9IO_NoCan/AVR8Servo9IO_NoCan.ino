@@ -219,8 +219,11 @@ uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = {A0,A1,A2,A3,A4,A5,3,4};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
-uint8_t iopin[NUM_IO] = {5,6,7,8,9,10,11,12,13}; // use pin 13 LED for demo purposes with direct cnx
-
+#ifdef NOCAN
+  uint8_t iopin[NUM_IO] = {5,6,7,8,9,10,11,12,13}; // use pin 13 LED for demo purposes with direct cnx
+#else
+  uint8_t iopin[NUM_IO] = {5,6,7,8,9,10,11,12,13};  // use free pins on MERG CAN board
+#endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
@@ -234,7 +237,7 @@ void userInitAll()
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
-      //NODECONFIG.put(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
+      //NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
       NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), 90);
     }
   }
@@ -298,10 +301,12 @@ void servoProcess() {
       dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]++);
+      delay(50);
     } else if(servoTarget[i] < servoActual[i] ) {
       dP("\nservo<"); PV(servodelay); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]); 
       servo[i].write(servoActual[i]--);
+      delay(50);
     } else if(servo[i].attached()) servo[i].detach(); 
   }
 }
@@ -384,17 +389,23 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   dPS(" Len: ", (uint16_t)length);
   dPS(" Func: ", (uint8_t)func);
   setupPins();
-  servoSetup();
+  servoSet();
 }
 
 // Reinitialize servos to their current positions
 // Called from setup() and after every configuration change
 void servoSetup() {
   servodelay = NODECONFIG.read( EEADDR(servodelay));
-  PV(servodelay);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-  //  servo[i].attach(servopin[i]);
+    servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
+    servoActual[i] = servoTarget[i];
+  }
+}
+// Allow Servo adjustments
+void servoSet() {
+  for(uint8_t i = 0; i < NUM_SERVOS; i++) {
+    uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
     servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
   }
 }
