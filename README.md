@@ -1,6 +1,6 @@
 # Arduino Nano LCC Journey
 
-## Page updated 4th December 2024 Minor bug fix
+## Repository & Wiki updated 5th December 2024 Minor bug fix & servo turnout details added.
 
 ----
 
