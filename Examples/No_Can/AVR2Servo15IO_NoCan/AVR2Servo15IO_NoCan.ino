@@ -14,7 +14,7 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 // derived from work by Alex Shepherd and David Harris
 // 
 //==============================================================
-// - 2 Servo channels, each wirh 
+// - 2 Servo channels, each with 
 //     - three settable positions
 //     - three set position events 
 // - N input/output channels:
@@ -478,7 +478,7 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-2Servo8IO_NoCan");
+    dP("\n AVR-2Servo15IO_NoCan");
   #endif
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
