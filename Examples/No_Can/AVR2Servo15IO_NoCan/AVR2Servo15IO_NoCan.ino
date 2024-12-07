@@ -50,10 +50,10 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 #include <Wire.h>
 
 // Board definitions
-#define MANU "J Holmes"      // The manufacturer of node
+#define MANU "J Holmes"               // The manufacturer of node
 #define MODEL "AVR2Servo15IO_NoCan"   // The model of the board
-#define HWVERSION "0.1"     // Hardware version
-#define SWVERSION "0.1"     // Software version
+#define HWVERSION "0.1"               // Hardware version
+#define SWVERSION "0.1"               // Software version
 
 // To set a new nodeid edit the next line
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x01
