@@ -50,10 +50,10 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 #include <Wire.h>
 
 // Board definitions
-#define MANU "J Holmes"      // The manufacturer of node
+#define MANU "J Holmes"               // The manufacturer of node
 #define MODEL "AVR2Servo15IO_NoCan"   // The model of the board
-#define HWVERSION "0.1"     // Hardware version
-#define SWVERSION "0.1"     // Software version
+#define HWVERSION "0.1"               // Hardware version
+#define SWVERSION "0.1"               // Software version
 
 // To set a new nodeid edit the next line
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x01
@@ -147,29 +147,29 @@ const char configDefInfo[] PROGMEM =
 //   Memory structure of EEPROM, must match CDI above
     typedef struct {
           EVENT_SPACE_HEADER eventSpaceHeader; // MUST BE AT THE TOP OF STRUCT - DO NOT REMOVE!!!
-          char nodeName[20];  // optional node-name, used by ACDI
-          char nodeDesc[24];  // optional node-description, used by ACDI
+          char nodeName[20];                   // optional node-name, used by ACDI
+          char nodeDesc[24];                   // optional node-description, used by ACDI
       // ===== Enter User definitions below =====
           uint8_t servodelay;
           struct {
-            char desc[8];        // description of this Servo Turnout Driver
+            char desc[8];                      // description of this Servo Turnout Driver
             struct {
-              EventID eid;       // consumer eventID
-              uint16_t angle;       // position
+              EventID eid;                     // consumer eventID
+              uint16_t angle;                  // position
             } pos[NUM_POS];
           } servos[NUM_SERVOS];
           struct {
             char desc[8];
             uint8_t type;
-            uint8_t duration;    // 100ms-25.5s, 0=solid
-            uint8_t period;      // 100ms-25.5s, 0=no repeat
+            uint8_t duration;                 // 100ms-25.5s, 0=solid
+            uint8_t period;                   // 100ms-25.5s, 0=no repeat
             EventID onEid;
             EventID offEid;
           } io[NUM_IO];
       // ===== Enter User definitions above =====
       // items below will be included in the EEPROM, but are not part of the CDI
-      uint8_t curpos[NUM_SERVOS];  // save current positions of servos
-    } MemStruct;                 // type definition
+      uint8_t curpos[NUM_SERVOS];            // save current positions of servos
+    } MemStruct;                             // type definition
 
 
 extern "C" {
@@ -220,9 +220,9 @@ uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
 uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3}; // use pin 13 LED for demo purposes with direct cnx
+  uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3}; // use for demo purposes with direct cnx
 #else
-  uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {3,4,5,6,7,8,9,10,11,12,13,A0,A1,A2,A3};  
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
@@ -347,7 +347,7 @@ void produceFromInputs() {
         //dP("\ninput "); PV(type); PV(s); PV(d);
         if(d==0) OpenLcb.produce( base+c*2 + (!s^(type&1)) ); // if no delay send event immediately
         else {
-          next[c] = millis() + (uint16_t)d*100;                   // else register the delay
+          next[c] = millis() + (uint16_t)d*100;               // else register the delay
           //PV(millis()); PV(next[c]);
         }
       }
