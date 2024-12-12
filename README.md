@@ -4,7 +4,7 @@
 
 We have recieved notice of a bug which is effecting the servo speed change not working since the last bug fix. We are looking into it and will post a release once corrected and fully tested by myself.
 
-The last bug fix was needed to fix a power up issue that could cause an issue cuasing turnout damage. This fix introduced the new bug which I had not spotted during testing.
+The last bug fix was needed to fix a power up issue that could cause an issue causing turnout damage. This fix introduced the new bug which I had not spotted during testing.
 
 ----
 
