@@ -1,6 +1,6 @@
 
 //==============================================================
-// AVR_8OutputNode using ACAN
+// AVR_8outputNode using ACAN
 //   A prototype of an 8-channel Output OpenLCB board
 //
 //   David Harris 2019, adapted from
