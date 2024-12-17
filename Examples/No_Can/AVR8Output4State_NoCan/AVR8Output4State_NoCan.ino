@@ -1,19 +1,14 @@
 
 //==============================================================
-// AVR_8OutputNode using ACAN
+// AVR_8outputNode using NoCAN
 //   A prototype of an 8-channel Output OpenLCB board
 //
 //   David Harris 2019, adapted from
 //   Bob Jacobsen 2010, 2012
 //      based on examples by Alex Shepherd and David Harris
 //   Updated 2024.09 DPH
-//   Updated 2024.12. John Holmes
+//   Updated 2024.12 John Holmes
 //==============================================================
-
-// Debugging -- uncomment to activate debugging statements:
-    // dP(x) prints x, dPH(x) prints x in hex,
-    // dPS(string,x) prints string and x
-//#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //   Note: disable debugging if this is chosen
@@ -231,14 +226,12 @@ void userInitAll() {
 // userSoftReset() - include any initialization after a soft reset, ie after configuration changes.
 // USER defined
 void userSoftReset() {
-  //dP("\n In userSoftReset()"); Serial.flush();
   REBOOT;  // defined in processor.h for each mpu
 }
 
 // userHardReset() - include any initialization after a hard reset, ie on boot-up.
 // USER defined
 void userHardReset() {
-  //dP("\n In userHardReset()"); Serial.flush();
   REBOOT;  // defined in processor.h for each mpu
 }
 
