@@ -1,6 +1,10 @@
 # Arduino Nano LCC Journey
 
-## Bug Highlighted 12 December 2024.
+## ESP32 Nodes being added 5 Jan 2025
+
+I have decided to swap over to the ESP32 for improved modules, I am currently making the sketch work on the new MCU. These will be found in the example/ ESP32 folder of the repository.
+
+### Bug Highlighted 12 December 2024.
 
 We have recieved notice of a bug which is effecting the servo speed change not working since the last bug fix. We are looking into it and will post a release once corrected and fully tested by myself.
 
