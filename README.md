@@ -51,9 +51,9 @@ The main library as produced by David Harris I have now uploaded more versions f
 
 ----
 
-## Version 0.1.5
+## Version 0.1.7
 
-This was released 15/11/2024
+This was released 10/Dec/2024
 
 
 
