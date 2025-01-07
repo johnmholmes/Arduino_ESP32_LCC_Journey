@@ -4,6 +4,8 @@
 
 In 2025 with a better understanding of LCC and being keen to use the Can bus as well as making standalone modules, I realised the need to swap over to the ESP32 to be able to achieve more capable modules. The ESP32 has built in Can and only needs a separate transceiver module, which cuts down on the number of GPIO's required for the Can bus side of things. I will be reworking all the current sketches to make sure they work with the ESP32.
 
+----
+
 ### Bug Highlighted 12 December 2024.
 
 We have recieved notice of a bug which is effecting the servo speed change not working since the last bug fix. We are looking into it and will post a release once corrected and fully tested by myself.
