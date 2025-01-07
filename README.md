@@ -1,8 +1,8 @@
 # Arduino Nano LCC Journey
 
-## ESP32 Nodes being added 5 Jan 2025
+## ESP32 Nodes being added 7 Jan 2025
 
-I have decided to swap over to the ESP32 for improved modules, I am currently making the sketch work on the new MCU. These will be found in the example/ ESP32 folder of the repository.
+In 2025 with a better understanding of LCC and being keen to use the Can bus as well as making standalone modules, I realised the need to swap over to the ESP32 to be able to achieve more capable modules. The ESP32 has built in Can and only needs a separate transceiver module, which cuts down on the number of GPIO's required for the Can bus side of things. I will be reworking all the current sketches to make sure they work with the ESP32.
 
 ### Bug Highlighted 12 December 2024.
 
