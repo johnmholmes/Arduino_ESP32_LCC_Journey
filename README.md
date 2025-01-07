@@ -2,7 +2,7 @@
 
 ## ESP32 Nodes being added 7 Jan 2025
 
-In 2025 with a better understanding of LCC and being keen to use the Can bus as well as making standalone modules, I realised the need to swap over to the ESP32 to be able to achieve more capable modules. The ESP32 has built in Can and only needs a separate transceiver module, which cuts down on the number of GPIO's required for the Can bus side of things. I will be reworking all the current sketches to make sure they work with the ESP32.
+In 2025, with a deeper understanding of LCC and a strong interest in utilizing the CAN bus while creating standalone modules, I recognized the need to transition to the ESP32 to develop more capable and efficient modules. The ESP32's built-in CAN controller, requiring only a separate transceiver module, significantly reduces the GPIO usage for CAN bus communication. I plan to rework all my existing sketches to ensure compatibility with the ESP32 and take full advantage of its capabilities.
 
 ----
 
