@@ -4,6 +4,8 @@
 
 In 2025, with a deeper understanding of LCC and a strong interest in utilizing the CAN bus while creating standalone modules, I recognized the need to transition to the ESP32 to develop more capable and efficient modules. The ESP32's built-in CAN controller, requiring only a separate transceiver module, significantly reduces the GPIO usage for CAN bus communication. I plan to rework all my existing sketches to ensure compatibility with the ESP32 and take full advantage of its capabilities.
 
+This does not mean that the Nano sketches will be removed from here, but may get modified to make them more useable for Can bus and standalone modules with limited functionalities.
+
 ----
 
 ### Bug Highlighted 12 December 2024.
