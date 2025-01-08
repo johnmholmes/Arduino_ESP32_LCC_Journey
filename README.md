@@ -1,4 +1,4 @@
-# Arduino Nano LCC Journey
+# Arduino Nano / ESP32 LCC Journey
 
 ## ESP32 Nodes being added 7 Jan 2025
 
