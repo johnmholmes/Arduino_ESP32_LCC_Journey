@@ -385,8 +385,8 @@ void doActions() {
       if( timer[i] && (now-timer[i])>0 ) {
         dP("\naFIRE");
         if(pi+1>NUM_CHANNEL) return;
-        analogWrite(pin[pi], random(120,durn));
-        analogWrite(pin[pi+1], random(120,rate));
+        analogWrite(pin[pi], random(0,durn));
+        analogWrite(pin[pi+1], random(0,rate));
         timer[i] = now+15;
       }
       break;
