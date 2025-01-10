@@ -1,8 +1,8 @@
-# Arduino Nano Examples
+# Arduino Nano / ESP32 Examples
 
-These sketches are written for an Arduino Nano but may work for other MCUs but I have only tested them with the Nano.
+There are sketches  written for Arduino Nano and ESP32 while they may work on other MCUs. I am keeping them separated to make it easier for novice coders to work with them.
 
-It demonstrates: 
+They demonstrates: 
 * CDI
 * memstruct of EEPROM reflecting the CDI structure
 * setting flags to refect whether eveentids are used as consumers, producers, or both, see: **const EIDTab eidtab[NUM_EVENT] PROGMEM**
