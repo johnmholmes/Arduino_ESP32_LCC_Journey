@@ -2,7 +2,7 @@
 
 ## Bug Reports
 
-Please raside bug reports via johnmholmes@tiscali.co.uk
+Please raise bug reports via johnmholmes@tiscali.co.uk
 
 ----
 
