@@ -1,5 +1,11 @@
 # Arduino Nano / ESP32 LCC Journey
 
+## Bug Reports
+
+Please raside bug reports via johnmholmes@tiscali.co.uk
+
+----
+
 ## ESP32 Nodes being added 7 Jan 2025
 
 In 2025, with a deeper understanding of LCC and a strong interest in utilizing the CAN bus while creating standalone modules, I recognized the need to transition to the ESP32 to develop more capable and efficient modules. The ESP32's built-in CAN controller, requiring only a separate transceiver module, significantly reduces the GPIO usage for CAN bus communication. I plan to rework all my existing sketches to ensure compatibility with the ESP32 and take full advantage of its capabilities.
