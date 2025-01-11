@@ -10,3 +10,6 @@ They demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
+== Bug report email
+
+johnmholmes@tiscali.co.uk
