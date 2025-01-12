@@ -11,7 +11,7 @@
   High: pushes the pin high (3.3V), the parameters make no change
   Flash: alternates between low and high
     Parameter 1: sets how long the pin is high (100-25.5 sec)
-    Parameter 2: sets ho long the pin is low (100-25.5 sec)
+    Parameter 2: sets how long the pin is low (100-25.5 sec)
   Double strobe: puts the pin high, then low, then high, and then low.
     Parameter 1: how long the first low is held (100-25.5 sec)
     Parameter 2: how long the second low is held (100-25.5 sec)
@@ -23,7 +23,7 @@
         between 25 sec and 30 sec.  
     This should work well for house lights for example.  
   Fire: this uses two consecutive pins. 
-    It uses analogWtite to set the brightness of two LEDs attached to the pins.
+    It uses analogWrite to set the brightness of two LEDs attached to the pins.
     You may have to choose higher values to see an effect, as values below a 
     threshold may not light the LED.  
     Parameter 1: sets the randomness of the first pin of the pair 
@@ -35,7 +35,7 @@
 //   Bob Jacobsen 2010, 2012
 //      based on examples by Alex Shepherd and David Harris
 //   Updated 2024.09 DPH
-//   Updated 2024.12. John Holmes
+//   Updated 2025.1 John Holmes
 //==============================================================
 
 // Debugging -- uncomment to activate debugging statements:
@@ -44,7 +44,7 @@
 //#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
-//   Note: disable debugging if this is chosen
+// Note: disable debugging if this is chosen
 #include "GCSerial.h"
 
 // New ACan for MCP2515 pins used for SPI CS 5, SK 18, SO 19, SI 23, INT 27
@@ -70,13 +70,13 @@
 
 // Board definitions
 #define MANU "OpenLCB"           // The manufacturer of node
-#define MODEL "13 Output" // The model of the board
+#define MODEL "13 Output"        // The model of the board
 #define HWVERSION "0.1"          // Hardware version
 #define SWVERSION "0.1"          // Software version
 
 // Application definitions:
 // For this example, set the number of channels implemented.
-// Each corresponds to an input or output pin.
+// Each corresponds to an output pin.
 #define NUM_CHANNEL 13 // number of pins
 #define NUM_ACTION 40  // number of evets/actions
 // Total number of eventids, in this case there are two per channel,
@@ -92,8 +92,8 @@
 #include "OpenLCBHeader.h"        // System house-keeping.
 
 extern "C" {                      // the following are defined as external
-  #define N(x) xN(x)     // allows the insertion of value (x)
-  #define xN(x) #x       // .. into the CDI string.
+  #define N(x) xN(x)              // allows the insertion of value (x)
+  #define xN(x) #x                // .. into the CDI string.
 // ===== CDI =====
 //   Configuration Description Information in xml, **must match MemStruct below**
 //   See: http://openlcb.com/wp-content/uploads/2016/02/S-9.7.4.1-ConfigurationDescriptionInformation-2016-02-06.pdf
@@ -166,7 +166,7 @@ extern "C" {                      // the following are defined as external
           } action[NUM_ACTION];
           
       // ^^^^^ Enter User definitions above ^^^^^
-    } MemStruct;                 // EEPROM memory structure, must match the CDI above
+    } MemStruct;                // EEPROM memory structure, must match the CDI above
 
 extern "C" {
   
@@ -207,7 +207,7 @@ uint8_t protocolIdentValue[6] = {     // 0xD7,0x58,0x00,0,0,0};
 
 #ifndef OLCB_NO_BLUE_GOLD
   // ===== Blue/Gold =====
-  // Blue-gold refers to two standard buttons offering a rudimentary control ssystem for an node.
+  // Blue-gold refers to two standard buttons offering a rudimentary control system for an node.
   //   Features: teaching/learning of eventids; node identification; node reset.
 
   // Board choices, each has differing i/o choices
@@ -233,7 +233,7 @@ uint8_t protocolIdentValue[6] = {     // 0xD7,0x58,0x00,0,0,0};
 
 
 
-// ===== Process inputs and Producers eventids =====
+// ===== Process outputs and Producers eventids =====
 // USER defined
 uint8_t pin[NUM_CHANNEL] = { 21,22,15,2,4,16,17,13,12,14,26,25,33 };  // 13 channel
 uint8_t currentEvent[NUM_CHANNEL];
