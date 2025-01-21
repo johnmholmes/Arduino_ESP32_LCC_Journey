@@ -5,20 +5,17 @@
 Please raise bug reports via johnmholmes@tiscali.co.uk
 
 ----
+## Speed bug 21/1/2025
+
+The Bug effecting the servo speed looks like I have fixed it. I will test it and will start to add the modules to my layout over the few days.
+
+----
 
 ## ESP32 Nodes being added 7 Jan 2025
 
 In 2025, with a deeper understanding of LCC and a strong interest in utilizing the CAN bus while creating standalone modules, I recognized the need to transition to the ESP32 to develop more capable and efficient modules. The ESP32's built-in CAN controller, requiring only a separate transceiver module, significantly reduces the GPIO usage for CAN bus communication. I plan to rework all my existing sketches to ensure compatibility with the ESP32 and take full advantage of its capabilities.
 
 This does not mean that the Nano sketches will be removed from here, but may get modified to make them more useable for Can bus and standalone modules with limited functionalities.
-
-----
-
-### Bug Highlighted 12 December 2024.
-
-We have recieved notice of a bug which is effecting the servo speed change not working since the last bug fix. We are looking into it and will post a release once corrected and fully tested by myself.
-
-The last bug fix was needed to fix a power up issue that could cause an issue causing turnout damage. This fix introduced the new bug which I had not spotted during testing.
 
 ----
 
