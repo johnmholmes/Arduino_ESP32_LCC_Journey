@@ -1,13 +1,14 @@
 # Arduino Nano / ESP32 LCC Journey
 
-## Bug Reports
-
-Please raise bug reports via johnmholmes@tiscali.co.uk
-
-----
 ## Speed bug 21/1/2025
 
 The Bug effecting the servo speed looks like I have fixed it. I will test it and will start to add the modules to my layout over the few days.
+
+----
+
+## Bug Reports
+
+Please raise bug reports via johnmholmes@tiscali.co.uk
 
 ----
 
