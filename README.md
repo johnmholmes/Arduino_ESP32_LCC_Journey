@@ -1,6 +1,6 @@
 # Arduino Nano / ESP32 LCC Journey
 
-## Speed bug 21/1/2025
+## Speed bug 21/1/2025 Update
 
 The Bug effecting the servo speed looks like I have fixed it. I will test it and will start to add the modules to my layout over the few days.
 
