@@ -18,7 +18,9 @@
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10        // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
-#include "ACan.h"             // uses local ACan class, comment out if using GCSerial
+#define ACAN_RX_NBUF 4       // number of receive buffers
+#define ACAN_TX_NBUF 2       // number of transmit buffers
+#include <ACan.h>             // uses ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
@@ -73,7 +75,7 @@ extern "C" {                      // the following are defined as external
             <description>Define events associated with Output Pins</description>
             <group replication=')" N(NUM_CHANNEL) R"('>
                 <name>Digital Output Pins</name>
-                <repname>Output</repname>
+                <repname>Output </repname>
                 <string size='16'><name>Description</name></string>
                 <eventid><name>Set Output Off Event</name></eventid>
                 <eventid><name>Set Output On Event</name></eventid>
