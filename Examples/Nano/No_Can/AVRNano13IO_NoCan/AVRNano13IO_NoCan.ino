@@ -9,7 +9,7 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 //==============================================================
 // AVR 0Servos NIO ACAN with Toggle
 //
-// Coprright 2024 David P Harris
+// Copyright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
 // 
 //==============================================================
@@ -44,7 +44,9 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-//#include "ACan.h"            // uses local ACan class, comment out if using GCSerial
+#define ACAN_RX_NBUF 4       // number of receive buffers
+#define ACAN_TX_NBUF 2       // number of transmit buffers
+//#include <ACan.h>            // uses ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
@@ -82,7 +84,7 @@ const char configDefInfo[] PROGMEM =
     <name>Application Configuration</name>
     <group replication=')" N(NUM_IO) R"('>
         <name>Input/Output</name>
-        <repname>IO#</repname>
+        <repname>IO </repname>
         <string size='8'><name>Description</name></string>
         <int size='1'>
             <name>Channel type</name>
@@ -102,14 +104,12 @@ const char configDefInfo[] PROGMEM =
         </int>
         <int size='1'>
             <name>On-Duration/On-delay 1-255 = 100ms-25.5s, 0=steady-state</name>
-            <hints><slider tickSpacing='50' immediate='yes'> </slider></hints>
+            <hints><slider tickSpacing='50' immediate='yes' showValue='yes'> </slider></hints>
         </int>
-        <int offset="-1" default="0" size='1'><name>Value</name></int>
         <int size='1'>
             <name>Off-Period/Off-delay 1-255 = 100ms-25.5s, 0=No repeat</name>
-            <hints><slider tickSpacing='50' immediate='yes'> </slider></hints>
+            <hints><slider tickSpacing='50' immediate='yes' showValue='yes'> </slider></hints>
         </int>
-        <int offset="-1" default="0" size='1'><name>Value</name></int>
         <eventid><name>On-Event</name></eventid>
         <eventid><name>Off-Event</name></eventid>
     </group>
@@ -382,9 +382,6 @@ void setup()
 
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
   Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
-  // attach and put servos to last known position
-  //for(uint8_t i = 0; i < NUM_SERVOS; i++) 
-  //  servo[i].attach(servopin[i]);
   setupPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
 }
