@@ -292,6 +292,7 @@ void pceCallback(uint16_t index) {
 // === Process servos ===
 // This is called from loop to service the servos
 void servoProcess() {
+  servodelay = NODECONFIG.read( EEADDR(servodelay));
   static long last = 0;
   if( (millis()-last) < servodelay ) return;
   last = millis();
