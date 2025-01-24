@@ -51,7 +51,7 @@
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 5        // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 27        // set for the MCP2515 interrupt pin, usually 2 or 3
-//#include "ACan.h"             // uses local ACan class, comment out if using GCSerial
+//#include <ACan.h>             // uses ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
