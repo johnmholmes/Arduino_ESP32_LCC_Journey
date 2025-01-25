@@ -2,7 +2,7 @@
 
 # Please Use The Wiki for details
 
-## Speed bug 24/1/2025 Update
+## Speed bug 25/1/2025 Update
 
 The Bug effecting the servo speed looks like I have fixed it. I will test it and will start to add the modules to my layout over the few days. I have amended the Nano NoCan example AVR2Servo8IO_NoCan only for testing.
 
@@ -36,12 +36,6 @@ The main library as produced by David Harris I have now uploaded more versions f
  - We have 8,13,17 input or output option.
 
  - If you find any bugs please let me know so we can investigate them.
-
-----
-
-- This repository will primarily focus on the Arduino Nano and Mega boards, as well as the MCP2515 CAN module.
-- We currently have the buffer values set for 4 on the read and 2 on the transmit.
-
 
 ----
 
