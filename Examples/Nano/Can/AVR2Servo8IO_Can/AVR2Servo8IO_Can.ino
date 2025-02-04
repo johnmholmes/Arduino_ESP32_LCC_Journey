@@ -1,3 +1,6 @@
+//2025.02.25 changes:
+//  Use update and update16 instead of write to reduce EEPROM wear
+//  Moved initialization of curpos (may have been overwriting things!)
 /*
 This is my test version for demonstration CAN Bus use only by John Holmes
 
@@ -11,13 +14,12 @@ This is my test version for demonstration CAN Bus use only by John Holmes
   - Pins A4,A5 servos
 
 */
-
 //==============================================================
-// AVR 2Servos NIO ACAN with Toggle
+// AVR 2Servos NIO using ACAN
 //
-// Copyright 2024 David P Harris
+// Coprright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
-// 
+// Updated 2024.11.14
 //==============================================================
 // - 2 Servo channels, each with 
 //     - three settable positions
@@ -26,11 +28,11 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //     - type: 0=None, 
 //             1=Input, 2=Input inverted, 
 //             3=Input with pull-up, 4=Input with pull-up inverted, 
-//             5=Input toggle, 6=Toggle with oull-up
+//             5=Input toggle, 6=Toggle with pull-up
 //             7=Output, 8=Output inverted.
 //     - for Outputs: 
 //       - Events are consumed
-//       - On-duration: how long the ouput is set, from 10ms - 2550ms, 0 means forever
+//       - On-duration: how long the output is set, from 10ms - 2550ms, 0 means forever
 //       - Off-period: the period until a repeat pulse, 0 means no repeat
 //     - for Inputs:
 //       - Events are produced
@@ -47,27 +49,32 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //#include "GCSerial.h"
 
 // New ACan for MCP2515
-#define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
-#define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
-#define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-#define ACAN_RX_NBUF 4       // number of receive buffers
-#define ACAN_TX_NBUF 2       // number of transmit buffers
-#include <ACan.h>            // uses ACan class, comment out if using GCSerial
+#define ACAN_FREQ 8000000UL   // set for crystal freq feeding the MCP2515 chip
+#define ACAN_CS_PIN 10        // set for the MCP2515 chip select pin, usually 10 on Nano
+#define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
+#define ACAN_RX_NBUF 2        // number of receive buffers
+#define ACAN_TX_NBUF 2        // number of transmit buffers
+#include <ACan.h>             // uses main library ACan class, comment out if using GCSerial
 
 #include <Wire.h>
 
 // Board definitions
-#define MANU "J Holmes"      // The manufacturer of node
-#define MODEL "AVR2Servo8IO"   // The model of the board
-#define HWVERSION "0.1"     // Hardware version
-#define SWVERSION "0.1"     // Software version
+#define MANU "OpenLCB"        // The manufacturer of node
+#define MODEL "AVR2Servo8IO"  // The model of the board
+#define HWVERSION "0.1"       // Hardware version
+#define SWVERSION "0.1"       // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x02
 
-// To Force Reset EEPROM to Factory Defaults set this value t0 1, else 0.
+// To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
+
+// If you want the servopositions save, every x ms, set SAVEPERIOD > 0. 
+// 300000 would be every 30 minutes, the EEPROM should last > 5 years. 
+// Note: a write will not be done when the servo position has not changed. 
+#define SAVEPERIOD 300000
 
 // User defs
 #define NUM_SERVOS 2
@@ -104,9 +111,9 @@ const char configDefInfo[] PROGMEM =
         <string size='8'><name>Description</name></string>
         <group replication=')" N(NUM_POS) R"('>
         <name>  Closed     Midpoint   Thrown</name>
-            <repname>Position </repname>
+            <repname>Position</repname>
             <eventid><name>EventID</name></eventid>
-            <int size='2'>
+            <int size='1'>
                 <name>Servo Position in Degrees</name>
                 <min>0</min><max>180</max>
                 <hints><slider tickSpacing='45' immediate='yes' showValue='yes'> </slider></hints>
@@ -160,7 +167,7 @@ const char configDefInfo[] PROGMEM =
             char desc[8];        // description of this Servo Turnout Driver
             struct {
               EventID eid;       // consumer eventID
-              uint16_t angle;       // position
+              uint8_t angle;     // position
             } pos[NUM_POS];
           } servos[NUM_SERVOS];
           struct {
@@ -172,9 +179,11 @@ const char configDefInfo[] PROGMEM =
             EventID offEid;
           } io[NUM_IO];
       // ===== Enter User definitions above =====
-      // items below will be included in the EEPROM, but are not part of the CDI
       uint8_t curpos[NUM_SERVOS];  // save current positions of servos
+      // items below will be included in the EEPROM, but are not part of the CDI
     } MemStruct;                 // type definition
+
+uint8_t curpos[NUM_SERVOS]; 
 
 
 extern "C" {
@@ -218,15 +227,16 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 #endif // OLCB_NO_BLUE_GOLD
 
 #include <Servo.h>
+//#include <ESP32Servo.h>
 Servo servo[2];
 uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = {A4,A5};
-uint8_t servoActual[NUM_SERVOS] = { 90, 90 };
-uint8_t servoTarget[NUM_SERVOS] = { 90, 90 };
+uint8_t servoActual[NUM_SERVOS];
+uint8_t servoTarget[NUM_SERVOS];
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A0,A1}; // use pin 13 LED for demo purposes with direct cnx
+  uint8_t iopin[NUM_IO] = {4,5,6,7,8,A0,A1,A2}; 
 #else
-  uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A0,A1};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {4,5,6,7,8,A0,A1,A2};  // use free pins on MERG CAN board
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
@@ -237,23 +247,42 @@ void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
   NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO"));
-  NODECONFIG.put(EEADDR(servodelay), 50);
+  NODECONFIG.update(EEADDR(servodelay), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
-      //NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), (uint8_t)((p*180)/(NUM_POS-1)));
-      NODECONFIG.write16(EEADDR(servos[i].pos[p].angle), 90);
+      NODECONFIG.update(EEADDR(servos[i].pos[p].angle), 90);
+      NODECONFIG.update(EEADDR(curpos[i]), 0);
     }
   }
   for(uint8_t i = 0; i < NUM_IO; i++) {
     NODECONFIG.put(EEADDR(io[i].desc), ESTRING(""));
-    NODECONFIG.write(EEADDR(io[i].type), 0);
-    NODECONFIG.write(EEADDR(io[i].duration), 0);
-    NODECONFIG.write(EEADDR(io[i].period), 0);
-    NODECONFIG.write(EEADDR(curpos[i]), 1);
+    NODECONFIG.update(EEADDR(io[i].type), 0);
+    NODECONFIG.update(EEADDR(io[i].duration), 0);
+    NODECONFIG.update(EEADDR(io[i].period), 0);
   }  
 }
 
+// determine the state of each eventid
+enum evStates { VALID=4, INVALID=5, UNKNOWN=7 };
+uint8_t userState(uint16_t index) {
+  //dP("\n userState "); dP((uint16_t) index);
+    if(index < NUM_SERVOS*NUM_POS) {
+      int ch = index/3;
+      int pos = index%3;
+      //dP( (uint8_t) curpos[ch]==pos);
+      if( curpos[ch]==pos ) return VALID;
+                else return INVALID;
+    } else {
+      int ch = (index-NUM_SERVOS*NUM_POS)/2;
+      if( NODECONFIG.read(EEADDR(io[ch].type))==0) return UNKNOWN;
+      int evst = index % 2;
+      //dP((uint8_t) iostate[ch]==evst);
+      if( iostate[ch]==evst ) return VALID;
+    }
+    return INVALID;
+}
+    
 // ===== Process Consumer-eventIDs =====
 void pceCallback(uint16_t index) {
 // Invoked when an event is consumed; drive pins as needed
@@ -262,13 +291,13 @@ void pceCallback(uint16_t index) {
 // The pattern is mostly one way, blinking the other, hence inverse.
 //
   #define PV(x) { dP(" " #x "="); dP(x); }
-  dP("\npceCallback: Event Index: "); dP((uint16_t)index);
+  dP("\npceCallback, index="); dP((uint16_t)index);
     if(index<NUM_SERVOS*NUM_POS) {
       uint8_t outputIndex = index / 3;
       uint8_t outputState = index % 3;
-      NODECONFIG.write( EEADDR(curpos[outputIndex]), outputState);
+      curpos[outputIndex] = outputState;
       servo[outputIndex].attach(servopin[outputIndex]);
-      servoTarget[outputIndex] = NODECONFIG.read16( EEADDR(servos[outputIndex].pos[outputState].angle) );
+      servoTarget[outputIndex] = NODECONFIG.read( EEADDR(servos[outputIndex].pos[outputState].angle) );
     } else {
       uint8_t n = index-NUM_SERVOS*NUM_POS;
       uint8_t type = NODECONFIG.read(EEADDR(io[n/2].type));
@@ -297,23 +326,28 @@ void pceCallback(uint16_t index) {
 // === Process servos ===
 // This is called from loop to service the servos
 void servoProcess() {
-  servodelay = NODECONFIG.read( EEADDR(servodelay));
   static long last = 0;
   if( (millis()-last) < servodelay ) return;
   last = millis();
   for(int i=0; i<NUM_SERVOS; i++) {
     if(servoTarget[i] > servoActual[i] ) {
-      dP("\nservo>"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]);
       servo[i].write(servoActual[i]++);
-
     } else if(servoTarget[i] < servoActual[i] ) {
-      dP("\nservo<"); PV(servodelay); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
       if(!servo[i].attached()) servo[i].attach(servopin[i]); 
       servo[i].write(servoActual[i]--);
-
     } else if(servo[i].attached()) servo[i].detach(); 
   }
+  #if SAVEPERIOD > 0
+    static long lastsave = 0;
+    if( (millis()-lastsave) > SAVEPERIOD ) {
+      lastsave = millis();
+      for(int i=0; i<NUM_SERVOS; i++) 
+        NODECONFIG.update( EEADDR(curpos[i]), curpos[i]);
+      dP("\n Pos saved");
+    }
+  #endif
+
 }
 
 // ==== Process Inputs ====
@@ -385,6 +419,30 @@ void userHardReset() {}
 
 #include "OpenLCBMid.h"    // Essential, do not move or delete
 
+#if 0
+#define P(...) Serial.print( __VA_ARGS__)
+#define PV(x) { P(" "); P(#x  "="); P(x); }
+#define PVL(x) { P("\n"); P(#x  "="); P(x); }
+void printMem() {
+  PVL(NODECONFIG.read(EEADDR(servodelay)));
+  for(int s=0;s<NUM_SERVOS;s++) {
+    P("\nServo "); P(s);
+    for(int p=0;p<NUM_POS;p++) {
+      PV(NODECONFIG.read(EEADDR(servos[s].pos[p])));
+    }
+  }
+  /*
+  for(int i=0;s<NUM_IO;i++) {
+    P("\nIO "); P(i);
+    PV(NODECONFIG.read(EEADDR(io[i].type)));
+    PV(NODECONFIG.read(EEADDR(io[i].duration)));
+    PV(NODECONFIG.read(EEADDR(io[i].period)));
+  }
+  */
+}
+#endif
+
+
 // Callback from a Configuration write
 // Use this to detect changes in the ndde's configuration
 // This may be useful to take immediate action on a change.
@@ -393,52 +451,66 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
   dPS(" Func: ", (uint8_t)func);
-  setupPins();
+  setupIOPins();
   servoSet();
 }
 
 // Reinitialize servos to their current positions
 // Called from setup() and after every configuration change
 void servoSetup() {
-
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
-    uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-    servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
-    servoActual[i] = servoTarget[i];
+    #if SAVEPERIOD > 0
+      curpos[i] = NODECONFIG.read( EEADDR( curpos[i] ) ); 
+    #else 
+      curpos[i] = 0;
+      dP("\nset curpos=0");
+    #endif
+    //servoActual[i] = 90;
+    servoActual[i] = NODECONFIG.read(EEADDR(servos[i].pos[0].angle));
+    servo[i].attach(servopin[i]);
+    servo[i].write( servoActual[i] );
+    dP("\n actual="); dP(servoActual[i]);
   }
+  servoSet();
 }
 // Allow Servo adjustments
 void servoSet() {
-    servodelay = NODECONFIG.read( EEADDR(servodelay));
+  servodelay = NODECONFIG.read( EEADDR( servodelay) );
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
-    uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-    servoTarget[i] = NODECONFIG.read16( EEADDR(servos[i].pos[cpos].angle) );
+    //uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
+    uint8_t cpos = curpos[i];
+    dP("\n cpos="); dP(cpos);
+    servoTarget[i] = 5+ NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
+    dP("\n target="); dP(servoTarget[i]);
   }
 }
 
 // Setup the io pins
 // called by setup() and after a configuration change
-void setupPins() {
+void setupIOPins() {
   dP("\nPins: ");
   for(uint8_t i=0; i<NUM_IO; i++) {
     uint8_t type = NODECONFIG.read( EEADDR(io[i].type));
-    dP(iopin[i]); dP(":"); dP(type); dP(", ");
     switch (type) {
       case 1: case 2: case 5:
+        dP(" IN:");
         pinMode(iopin[i], INPUT); 
         iostate[i] = type&1;
         if(type==5) iostate[i] = 0;
         break;
       case 3: case 4: case 6:
+        dP(" INP:");
         pinMode(iopin[i], INPUT_PULLUP); 
         iostate[i] = type&1;
         break;
       case 7: case 8: case 9: case 10:
+        dP(" OUT:");
         pinMode(iopin[i], OUTPUT); 
         iostate[i] = !type&1;
         digitalWrite(iopin[i], !type&1);
         break;
     }
+    dP(iopin[i]); dP(":"); dP(type); dP(", ");
   }
 }
 
@@ -471,7 +543,7 @@ void appProcess() {
           if( NODECONFIG.read(EEADDR(io[i].duration)) > 0 )
             next[i] = now + 100*NODECONFIG.read(EEADDR(io[i].duration));
           else next[i] = 0;
-
+            //PV(next[i]);
         }
       }
     }
@@ -490,7 +562,7 @@ void setup()
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
   Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
   servoSetup();
-  setupPins();
+  setupIOPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
 }
 
@@ -514,3 +586,4 @@ void loop() {
   servoProcess();       // processes servos, moves them to their target
   processProducer();    // processes delayed producer events from inputs
 }
+
