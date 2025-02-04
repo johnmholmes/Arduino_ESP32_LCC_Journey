@@ -2,7 +2,7 @@
 
 # Please Use The Wiki for details
 
-## Speed bug 04/2/2025 Update
+## 04/2/2025 Update
 
 New sketch variants come very soon for the AVR2ServoNIO currently on testing.
 
