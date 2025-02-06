@@ -2,9 +2,9 @@
 
 # Please Use The Wiki for details
 
-## 04/2/2025 Update
+## 06/2/2025 Update
 
-New sketch variants come very soon for the AVR2ServoNIO currently on testing.
+New sketch variants come very soon for the AVR2ServoNIO currently on testing. & Wiki updated.
 
 ----
 
