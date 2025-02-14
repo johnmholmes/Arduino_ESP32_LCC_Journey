@@ -65,11 +65,11 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 #define SWVERSION "0.1"       // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x02
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // If you want the servopositions save, every x ms, set SAVEPERIOD > 0. 
 // 300000 would be every 30 minutes, the EEPROM should last > 5 years. 
