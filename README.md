@@ -2,9 +2,11 @@
 
 # Please Use The Wiki for details
 
-## 06/2/2025 Update
+## 14/2/2025 Update
 
-New sketch variants come very soon for the AVR2ServoNIO currently on testing. & Wiki updated.
+- For people looking at using either the ESP32 or the Pi Pico using the built in Can controllers. Please be advised many of the modules being sold come with a 120 ohm resistor installed across the Can H & L terminals, Which means you Can Bus will end up running below the advsed 60 ohms.
+- This includes the M5Stack Mini Can and I understand there other Can transceiver is the same.
+- The cheap sSN65hvd230 I have purchased from AliExpress are the same, However these are very easy to remove.
 
 ----
 
