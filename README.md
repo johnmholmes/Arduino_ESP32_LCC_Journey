@@ -5,7 +5,7 @@
 ## 14/2/2025 Update
 
 - For people looking at using either the ESP32 or the Pi Pico using the built in Can controllers. Please be advised many of the transceiver modules being sold come with a 120 ohm resistor installed across the Can H & L terminals, Which means your Can Bus will end up running below the advised 60 ohms.
-- This includes the M5Stack Mini Can and I understand there other Can transceiver is the same.
+- This includes the M5Stack Mini Can and I know there are other Can transceiver the same.
 - The cheap SN65hvd230 I have purchased from AliExpress are the same, However these are very easy to remove.
 
 ----
