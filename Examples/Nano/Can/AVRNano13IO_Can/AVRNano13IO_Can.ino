@@ -50,15 +50,15 @@ This is my test version for demonstration  CN BUS use only by John Holmes
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-#define ACAN_RX_NBUF 4       // number of receive buffers
+#define ACAN_RX_NBUF 2       // number of receive buffers
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 #include <ACan.h>            // uses ACan class, comment out if using GCSerial
  
 #include <Wire.h>
 
 // Board definitions
-#define MANU "J Holmes"      // The manufacturer of node
-#define MODEL "AVR13IO"   // The model of the board
+#define MANU "J Holmes"     // The manufacturer of node
+#define MODEL "AVR13IO"     // The model of the board
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
