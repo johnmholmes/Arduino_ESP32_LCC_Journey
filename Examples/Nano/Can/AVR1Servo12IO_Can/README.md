@@ -11,6 +11,13 @@ This sketch implements:
      inputs can be with or with pullups, inverted or not, or can be toggle. 
 
 
-Pin usage can be seen in the main file at the top. 
+I/O Pin usage 3,4,5,6,7,8,9,A0,A1,A2,A3,A4 
 
+Servo pin usage A5
+
+Can Bus Pins 2,10,11,12,13
+
+Hardware
+
+![Screenshot 2025-02-19 091722](https://github.com/user-attachments/assets/efde63fd-0246-4bcf-a99f-d70ff8018740)
 
