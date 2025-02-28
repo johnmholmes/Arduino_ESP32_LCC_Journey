@@ -2,6 +2,13 @@
 
 # Please Use The Wiki for details
 
+## 28/2/2025 Update
+
+- During testing with JMRI the infrared sensors are not reporting corectly within JMRI at the start of the day. This is being worked on and hopefully we will have a solution very soon.
+- If you are using LCC without JMRI once nodes are configured this will not be an issue.
+
+----
+
 ## 14/2/2025 Update
 
 - For people looking at using either the ESP32 or the Pi Pico using the built in Can controllers. Please be advised many of the transceiver modules being sold come with a 120 ohm resistor installed across the Can H & L terminals, Which means your Can Bus will end up running below the advised 60 ohms.
