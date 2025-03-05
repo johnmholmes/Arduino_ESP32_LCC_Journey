@@ -2,10 +2,11 @@
 
 # Please Use The Wiki for details
 
-## 1/Mar/2025 Update
+## 5th/Mar/2025 Update
 
-- During testing with JMRI the infrared sensors are not reporting corectly within JMRI at the start of the day. This seems to be an issue on my system only, I will try changing out the Arduino Nano and the shield one at a time to try and issolate the issue.
-- If you are using LCC without JMRI once nodes are configured this will not be an issue.
+- The issue with the start of day within JMRI is not sorted, I will be adding the infrared sensors to the Node later today.
+- Once this is done I will update the sketches within my repsoitory.
+- There are a few more details I need to add to the next video release.
 
 ----
 
