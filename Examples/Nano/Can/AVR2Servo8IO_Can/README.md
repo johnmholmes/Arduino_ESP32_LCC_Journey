@@ -1,6 +1,6 @@
 # AVR 2-Servo 8-IO Example, 
 
-This sketch was written for a Nano 
+This sketch was written for a Nano but now also includes the ARDUINO_UNOR4_MINIMA by change the board selection 
 This sketch implements:
 * two servos, each with three positions
    Positions cabe set to angles 0-180
