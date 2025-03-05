@@ -1,8 +1,8 @@
-//2025.02.25 changes:
+//2025.03.04 changes:
 //  Use update and update16 instead of write to reduce EEPROM wear
 //  Moved initialization of curpos (may have been overwriting things!)
 /*
-This is my test version for demonstration CAN Bus use only by John Holmes
+This is my test version for demonstration CAN Bus use only by John Holmes 2 Servo 8 I/O
 
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
@@ -10,7 +10,7 @@ This is my test version for demonstration CAN Bus use only by John Holmes
   - Pin 12 SO MISO (Master In Slave Out)
   - Pin 13 SCK (Serial Clock)
 
-  - Pins 4,5,6,7,A0,A1,A2,A3 are used for input or output
+  - Pins 4,5,6,7,8,9,A1,A2 are used for input or output
   - Pins A4,A5 servos
 
 */
@@ -43,10 +43,17 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 
 // Debugging -- uncomment to activate debugging statements:
 //#define DEBUG Serial
+#include <mdebugging.h>
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
+
+// Uno R4 definitions
+// CanTx=D4 ; CanRx=D5 for CAN transeiver
+#if defined(ARDUINO_UNOR4_MINIMA)
+  #include "R4.h"                 // if this is active, then comment out GCSerial.h
+#endif
 
 // New ACan for MCP2515
 #define ACAN_FREQ 8000000UL   // set for crystal freq feeding the MCP2515 chip
@@ -54,18 +61,20 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 #define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
 #define ACAN_RX_NBUF 2        // number of receive buffers
 #define ACAN_TX_NBUF 2        // number of transmit buffers
-#include <ACan.h>             // uses main library ACan class, comment out if using GCSerial
+#if defined(ARDUINO_ARCH_AVR) 
+  #include <ACan.h>     // uses main library ACan class, comment out if using GCSerial
+#endif
 
 #include <Wire.h>
 
 // Board definitions
-#define MANU "OpenLCB"        // The manufacturer of node
+#define MANU "J Holmes"        // The manufacturer of node
 #define MODEL "AVR2Servo8IO"  // The model of the board
 #define HWVERSION "0.1"       // Hardware version
 #define SWVERSION "0.1"       // Software version
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x01
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01 //Node 1
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
@@ -74,7 +83,7 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 // If you want the servopositions save, every x ms, set SAVEPERIOD > 0. 
 // 300000 would be every 30 minutes, the EEPROM should last > 5 years. 
 // Note: a write will not be done when the servo position has not changed. 
-#define SAVEPERIOD 300000
+#define SAVEPERIOD 600000
 
 // User defs
 #define NUM_SERVOS 2
@@ -83,7 +92,6 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 
 #define NUM_EVENT NUM_SERVOS * NUM_POS + NUM_IO*2
 
-#include "mdebugging.h"           // debugging
 #include "processCAN.h"           // Auto-select CAN library
 #include "processor.h"            // auto-selects the processor type, EEPROM lib etc.
 #include "OpenLCBHeader.h"        // System house-keeping.
@@ -193,9 +201,9 @@ extern "C" {
     
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
-        REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
-        REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
-        REG_IO(7), 
+        REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),  
+        REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), 
+        REG_IO(6), REG_IO(7),  
     };
     
     // SNIP Short node description for use by the Simple Node Information Protocol
@@ -212,19 +220,6 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
     };
 
 #define OLCB_NO_BLUE_GOLD  // blue/gold not used in this sketch
-#ifndef OLCB_NO_BLUE_GOLD
-    #define BLUE 40  // built-in blue LED
-    #define GOLD 39  // built-in green LED
-    ButtonLed blue(BLUE, LOW);
-    ButtonLed gold(GOLD, LOW);
-    
-    uint32_t patterns[8] = { 0x00010001L, 0xFFFEFFFEL }; // two per channel, one per event
-    ButtonLed pA(13, LOW);
-    ButtonLed pB(14, LOW);
-    ButtonLed pC(15, LOW);
-    ButtonLed pD(16, LOW);
-    ButtonLed* buttons[8] = { &pA,&pA,&pB,&pB,&pC,&pC,&pD,&pD };
-#endif // OLCB_NO_BLUE_GOLD
 
 #include <Servo.h>
 //#include <ESP32Servo.h>
@@ -233,12 +228,14 @@ uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = {A4,A5};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
-#ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {4,5,6,7,8,A0,A1,A2}; 
+
+#ifdef ARDUINO_UNOR4_MINIMA
+  uint8_t iopin[NUM_IO] = {2,3,4,7,8,9,A0,A1}; // Minima
 #else
-  uint8_t iopin[NUM_IO] = {4,5,6,7,8,A0,A1,A2};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {4,5,6,7,8,9,A1,A2}; // Nano
 #endif
-bool iostate[NUM_IO] = {0};  // state of the iopin
+
+uint8_t iostate[NUM_IO];
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
 
@@ -260,6 +257,7 @@ void userInitAll()
     NODECONFIG.update(EEADDR(io[i].type), 0);
     NODECONFIG.update(EEADDR(io[i].duration), 0);
     NODECONFIG.update(EEADDR(io[i].period), 0);
+    iostate[i] = 0xFF;
   }  
 }
 
@@ -268,17 +266,18 @@ enum evStates { VALID=4, INVALID=5, UNKNOWN=7 };
 uint8_t userState(uint16_t index) {
   //dP("\n userState "); dP((uint16_t) index);
     if(index < NUM_SERVOS*NUM_POS) {
-      int ch = index/3;
-      int pos = index%3;
+      int ch = index/NUM_POS;
+      int pos = index%NUM_POS;
       //dP( (uint8_t) curpos[ch]==pos);
       if( curpos[ch]==pos ) return VALID;
                 else return INVALID;
     } else {
-      int ch = (index-NUM_SERVOS*NUM_POS)/2;
-      if( NODECONFIG.read(EEADDR(io[ch].type))==0) return UNKNOWN;
-      int evst = index % 2;
-      //dP((uint8_t) iostate[ch]==evst);
-      if( iostate[ch]==evst ) return VALID;
+      uint8_t ch = (index-NUM_SERVOS*NUM_POS)/2;
+      uint8_t type = NODECONFIG.read( EEADDR(io[ch].type) );
+      if( type==0) return UNKNOWN;
+      bool s = digitalRead( iopin[ch] );
+      if( !s^(type&1) ) return VALID;
+      else return INVALID;
     }
     return INVALID;
 }
@@ -495,13 +494,15 @@ void setupIOPins() {
       case 1: case 2: case 5:
         dP(" IN:");
         pinMode(iopin[i], INPUT); 
-        iostate[i] = type&1;
-        if(type==5) iostate[i] = 0;
+        //iostate[i] = type&1;
+        //if(type==5) iostate[i] = 0;
+        iostate[i] = 0xFF; // trigger first send
         break;
       case 3: case 4: case 6:
         dP(" INP:");
         pinMode(iopin[i], INPUT_PULLUP); 
-        iostate[i] = type&1;
+        //iostate[i] = type&1;
+        iostate[i] = 0xFF;
         break;
       case 7: case 8: case 9: case 10:
         dP(" OUT:");
@@ -569,18 +570,6 @@ void setup()
 // ==== Loop ==========================
 void loop() {
   bool activity = Olcb_process();
-  #ifndef OLCB_NO_BLUE_GOLD
-    if (activity) {
-      blue.blink(0x1); // blink blue to show that the frame was received
-    }
-    if (olcbcanTx.active) {
-      gold.blink(0x1); // blink gold when a frame sent
-      olcbcanTx.active = false;
-    }
-    // handle the status lights
-    gold.process();
-    blue.process();
-  #endif // OLCB_NO_BLUE_GOLD
   produceFromInputs();  // scans inputs and generates events on change
   appProcess();         // processes io pins, eg flashing
   servoProcess();       // processes servos, moves them to their target
