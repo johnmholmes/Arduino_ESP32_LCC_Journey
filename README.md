@@ -4,7 +4,7 @@
 
 ## 5th/Mar/2025 Update
 
-- The issue with the start of day within JMRI is not sorted, I will be adding the infrared sensors to the Node later today.
+- The issue with the start of day within JMRI is now sorted, I will be adding the infrared sensors to the Node later today.
 - Once this is done I will update the sketches within my repsoitory.
 - There are a few more details I need to add to the next video release.
 
