@@ -7,10 +7,10 @@
 //
 //
 
+#pragma message("!!! compiling ACan.h ")
+
 #ifndef ACan_H
 #define ACan_H
-
-#pragma message("Compiling ACan.h")
 
 #include <stdio.h>
 #include "OlcbCan.h"
@@ -60,10 +60,10 @@ void OlcbCanClass::init(){
     settings.mReceiveBufferSize = ACAN_RX_NBUF;
     settings.mTransmitBuffer0Size = ACAN_TX_NBUF;
     const uint16_t errorCode = acan_can.begin (settings, [] { acan_can.isr () ; }) ;
-    #if 1
+    #if 0
     Serial.begin(115200); delay(500); 
     if (errorCode == 0) {
-      #if 1
+      #if 0
       Serial.print ("Bit Rate prescaler: ") ;
       Serial.println (settings.mBitRatePrescaler) ;
       Serial.print ("Propagation Segment: ") ;

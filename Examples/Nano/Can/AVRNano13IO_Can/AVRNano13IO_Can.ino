@@ -52,7 +52,7 @@ This is my test version for demonstration  CN BUS use only by John Holmes
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
 #define ACAN_RX_NBUF 2       // number of receive buffers
 #define ACAN_TX_NBUF 2       // number of transmit buffers
-#include <ACan.h>            // uses ACan class, comment out if using GCSerial
+#include "ACan.h"            // uses ACan class, comment out if using GCSerial
  
 #include <Wire.h>
 

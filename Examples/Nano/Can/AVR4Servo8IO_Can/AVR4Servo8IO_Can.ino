@@ -62,7 +62,7 @@ This is my test version for demonstration CAN Bus use only by John Holmes 4 Serv
 #define ACAN_RX_NBUF 2        // number of receive buffers
 #define ACAN_TX_NBUF 2        // number of transmit buffers
 #if defined(ARDUINO_ARCH_AVR) 
-  #include <ACan.h>     // uses main library ACan class, comment out if using GCSerial
+  #include "ACan.h"     // uses main library ACan class, comment out if using GCSerial
 #endif
 
 #include <Wire.h>
