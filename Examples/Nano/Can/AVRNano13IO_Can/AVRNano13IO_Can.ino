@@ -202,6 +202,18 @@ void userInitAll()
   }  
 }
 
+// determine the state of each eventid
+enum evStates { VALID=4, INVALID=5, UNKNOWN=7 };
+uint8_t userState(uint16_t index) {
+  //dP("\n userState "); dP((uint16_t) index);
+  uint8_t ch = index/2;
+  uint8_t type = NODECONFIG.read( EEADDR(io[ch].type) );
+  if( type==0) return UNKNOWN;
+  bool s = digitalRead( iopin[ch] );
+  if( !s^(type&1) ) return VALID;
+  else return INVALID;
+}
+
 // ===== Process Consumer-eventIDs =====
 void pceCallback(uint16_t index) {
 // Invoked when an event is consumed; drive pins as needed
