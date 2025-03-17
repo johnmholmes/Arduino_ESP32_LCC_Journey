@@ -10,9 +10,9 @@
 
 ----
 
-## 6th/Mar/2025 Update
+## 17th/Mar/2025 Update
 
-- Sketches in the Nano folder have been updated, They can be used with the R4 Nano board but I have not tested them.
+- Sketches in the Nano folder have been updated, The servo sketches can be used with the R4 Nano board but I have not tested them.
 
 ----
 
