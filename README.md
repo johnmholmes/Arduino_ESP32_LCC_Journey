@@ -10,9 +10,9 @@
 
 ----
 
-## 17th/Mar/2025 Update
+## 23rd/Mar/2025 Update
 
-- Sketches in the Nano folder have been updated, The servo sketches can be used with the R4 Nano board but I have not tested them.
+- Arduino Mega Sketch added for 47 I/O usage for Mimic panels, it only has the USB GCSerial connection setup at the moment for testing.
 
 ----
 
