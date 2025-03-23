@@ -394,8 +394,8 @@ void setupPins() {
         break;
       case 8: case 10:
         pinMode(iopin[i], OUTPUT);
-        iostate[i] = !type&0;
-        digitalWrite(iopin[i], !type&0);
+        iostate[i] = !(type&1);
+        digitalWrite(iopin[i], !(type&1));
         break;
     }
   }
