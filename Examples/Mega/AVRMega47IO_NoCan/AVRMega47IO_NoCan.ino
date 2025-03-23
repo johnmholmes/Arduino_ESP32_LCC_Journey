@@ -387,15 +387,11 @@ void setupPins() {
         pinMode(iopin[i], INPUT_PULLUP); 
         iostate[i] = type&1;
         break;
-      case 7: case 9: 
+      case 7: case 8: case 9: case 10:
+        dP(" OUT:");
         pinMode(iopin[i], OUTPUT); 
-        iostate[i] = !type&1;
-        digitalWrite(iopin[i], !type&1);
-        break;
-      case 8: case 10:
-        pinMode(iopin[i], OUTPUT);
         iostate[i] = !(type&1);
-        digitalWrite(iopin[i], !(type&1));
+        digitalWrite(iopin[i], iostate[i]);
         break;
     }
   }
