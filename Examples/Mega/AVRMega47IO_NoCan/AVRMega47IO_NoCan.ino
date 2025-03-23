@@ -148,7 +148,6 @@ extern "C" {
     
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
-        //REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
         REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), 
         REG_IO(5), REG_IO(6), REG_IO(7), REG_IO(8), REG_IO(9),
         REG_IO(10), REG_IO(11), REG_IO(12), REG_IO(13), REG_IO(14),
