@@ -373,17 +373,18 @@ void setupPins() {
     switch (type) {
       case 1: case 2: case 5:
         pinMode(iopin[i], INPUT); 
-        iostate[i] = type&1;
+        iostate[i] = (type&1);
         if(type==5) iostate[i] = 0;
         break;
       case 3: case 4: case 6:
         pinMode(iopin[i], INPUT_PULLUP); 
-        iostate[i] = type&1;
+        iostate[i] = (type&1);
         break;
       case 7: case 8: case 9: case 10:
+        dP(" OUT:");
         pinMode(iopin[i], OUTPUT); 
-        iostate[i] = !type&1;
-        digitalWrite(iopin[i], !type&1);
+        iostate[i] = !(type&1);
+        digitalWrite(iopin[i], iostate[i]);
         break;
     }
   }
