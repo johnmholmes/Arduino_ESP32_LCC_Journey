@@ -65,7 +65,7 @@ This is my test version for demonstration Arduino Mega 2560 use only by John Hol
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // User defs
 #define NUM_IO 47
@@ -380,12 +380,14 @@ void setupPins() {
     switch (type) {
       case 1: case 2: case 5:
         pinMode(iopin[i], INPUT); 
-        iostate[i] = (type&1);
-        if(type==5) iostate[i] = 0;
+        //iostate[i] = (type&1);
+        //if(type==5) iostate[i] = 0;
+        iostate[i] = 0xFF; // trigger first send
         break;
       case 3: case 4: case 6:
         pinMode(iopin[i], INPUT_PULLUP); 
-        iostate[i] = (type&1);
+        //iostate[i] = (type&1);
+        iostate[i] = 0xFF; // trigger first send
         break;
       case 7: case 8: case 9: case 10:
         dP(" OUT:");
