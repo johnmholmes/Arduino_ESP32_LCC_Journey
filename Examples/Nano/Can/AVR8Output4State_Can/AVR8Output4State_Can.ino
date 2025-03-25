@@ -22,8 +22,6 @@
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 #include "ACan.h"             // uses ACan class, comment out if using GCSerial
 
-#include <Wire.h>
-
 #define OLCB_NO_BLUE_GOLD  // don't want Blue/Gold
 
 //************ USER DEFINITIONS ************************************
