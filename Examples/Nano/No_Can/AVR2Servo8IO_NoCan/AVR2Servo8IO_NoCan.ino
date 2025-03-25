@@ -49,8 +49,6 @@ This is my test version for demonstration NO CAN BUS use only by John Holmes
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 //#include <ACan.h>            // uses ACan class, comment out if using GCSerial
 
-#include <Wire.h>
-
 // Board definitions
 #define MANU "J Holmes"      // The manufacturer of node
 #define MODEL "AVR2Servo8IO_NoCan"   // The model of the board
