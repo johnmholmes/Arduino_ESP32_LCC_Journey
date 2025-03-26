@@ -65,8 +65,6 @@ This is my test version for demonstration CAN Bus use only by John Holmes 3 Serv
   #include "ACan.h"     // uses main library ACan class, comment out if using GCSerial
 #endif
 
-#include <Wire.h>
-
 // Board definitions
 #define MANU "J Holmes"        // The manufacturer of node
 #define MODEL "AVR3Servo8IO"  // The model of the board

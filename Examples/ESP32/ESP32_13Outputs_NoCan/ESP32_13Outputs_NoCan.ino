@@ -53,8 +53,6 @@
 #define ACAN_INT_PIN 27        // set for the MCP2515 interrupt pin, usually 2 or 3
 //#include <ACan.h>             // uses ACan class, comment out if using GCSerial
 
-#include <Wire.h>
-
 #define OLCB_NO_BLUE_GOLD  // don't want Blue/Gold
 
 //************ USER DEFINITIONS ************************************

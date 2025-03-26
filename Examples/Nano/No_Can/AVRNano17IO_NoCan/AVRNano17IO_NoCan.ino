@@ -44,11 +44,9 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 #define ACAN_FREQ 8000000UL  // set for crystal freq feeding the MCP2515 chip
 #define ACAN_CS_PIN 10       // set for the MCP2515 chip select pin, usually 10 on Nano
 #define ACAN_INT_PIN 2       // set for the MCP2515 interrupt pin, usually 2 or 3
-#define ACAN_RX_NBUF 4       // number of receive buffers
+#define ACAN_RX_NBUF 2       // number of receive buffers
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 //#include <ACan.h>            // uses local ACan class, comment out if using GCSerial
-
-#include <Wire.h>
 
 // Board definitions
 #define MANU "J Holmes"      // The manufacturer of node
@@ -144,7 +142,6 @@ extern "C" {
     
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
-        //REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
         REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
         REG_IO(7), REG_IO(8), REG_IO(9), REG_IO(10), REG_IO(11), REG_IO(12),
         REG_IO(13), REG_IO(14), REG_IO(15), REG_IO(16)
@@ -188,7 +185,7 @@ unsigned long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("17IO"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("17 IO"));
   for(uint8_t i = 0; i < NUM_IO; i++) {
     NODECONFIG.put(EEADDR(io[i].desc), ESTRING(""));
     NODECONFIG.write(EEADDR(io[i].type), 0);
@@ -320,17 +317,17 @@ void setupPins() {
     switch (type) {
       case 1: case 2: case 5:
         pinMode(iopin[i], INPUT); 
-        iostate[i] = type&1;
+        iostate[i] = (type&1);
         if(type==5) iostate[i] = 0;
         break;
       case 3: case 4: case 6:
         pinMode(iopin[i], INPUT_PULLUP); 
-        iostate[i] = type&1;
+        iostate[i] = (type&1);
         break;
       case 7: case 8: case 9: case 10:
         pinMode(iopin[i], OUTPUT); 
-        iostate[i] = !type&1;
-        digitalWrite(iopin[i], !type&1);
+        iostate[i] = (!type&1);
+        digitalWrite(iopin[i], (!type&1));
         break;
     }
   }

@@ -48,8 +48,6 @@ This is my test version for demonstration  CAN BUS use only by John Holmes
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 //#include <ACan.h>            // uses ACan class, comment out if using GCSerial
 
-#include <Wire.h>
-
 // Board definitions
 #define MANU "J Holmes"      // The manufacturer of node
 #define MODEL "AVR13IO_NoCan"   // The model of the board

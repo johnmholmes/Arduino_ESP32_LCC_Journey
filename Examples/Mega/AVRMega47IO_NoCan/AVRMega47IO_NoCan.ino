@@ -51,8 +51,6 @@ This is my test version for demonstration Arduino Mega 2560 use only by John Hol
 #define ACAN_RX_NBUF 2       // number of receive buffers
 #define ACAN_TX_NBUF 2       // number of transmit buffers
 //#include "ACan.h"            // uses ACan class, comment out if using GCSerial
- 
-#include <Wire.h>
 
 // Board definitions
 #define MANU "J Holmes"     // The manufacturer of node
