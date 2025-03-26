@@ -1,6 +1,6 @@
 # Arduino Nano / ESP32 Examples
 
-There are sketches  written for Arduino Nano and ESP32 while they may work on other MCUs. I am keeping them separated to make it easier for novice coders to work with them.
+These are sketches  written for Arduino Nano and ESP32 while they may work on other MCUs. I am keeping them separated to make it easier for novice coders to work with them.
 
 They demonstrates: 
 * CDI
