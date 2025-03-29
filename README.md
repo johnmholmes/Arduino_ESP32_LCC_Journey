@@ -1,4 +1,4 @@
-# Arduino Nano / ESP32 LCC Journey
+# Arduino Nano, Mega / ESP32 LCC Journey
 
 # Please Use The Wiki for details
 
@@ -10,14 +10,14 @@
 
 ----
 
-## 23rd/Mar/2025 Update
+## 29th/Mar/2025 Update
 
-- Arduino Mega Sketch added for 47 I/O usage for Mimic panels, it only has the USB GCSerial connection setup at the moment for testing.
+- Arduino Mega Sketch added for 47 I/O usage for Mimic panels, it only has the USB GCSerial connection setup at the moment for testing. I also have been testing 53 version for a mimic panel I need.
 
 ----
 
 
-## Bug Reports
+## Bug Reports 
 
 Please raise bug reports via johnmholmes@tiscali.co.uk
 
@@ -36,6 +36,7 @@ After a two weeks of trying to understand why the AVR sketches did nit work, it 
 - My goal is to present a selection of examples dedicated to the Arduino Nano and the MCP2515 module.
 - In the future you will see me looking at maybe the ESP32.
 - I will also colaberate with another MERG member to cover the Pi Pico versions.
+- I will also introduce The Arduino Mega which gives us 53 usable GPIO pins.
 
 ----
 
