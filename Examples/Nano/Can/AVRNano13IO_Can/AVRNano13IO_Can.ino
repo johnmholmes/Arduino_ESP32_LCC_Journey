@@ -1,5 +1,5 @@
 /*
-This is my test version for demonstration  CN BUS use only by John Holmes
+This is my test version for demonstration  CAN BUS use only by John Holmes
 
   - Pin 2 is used for interrupt
   - Pin 10 CS SS (Slave Select) (used to select the slave device, also known as CS or Chip Select)
