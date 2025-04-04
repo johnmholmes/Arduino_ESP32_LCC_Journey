@@ -49,7 +49,7 @@ EFFECTS:
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //   Note: disable debugging if this is chosen
-//#include "GCSerial.h"
+#include "GCSerial.h"
 
 // New ACan for MCP2515
 #define ACAN_FREQ 8000000UL   // set for crystal freq feeding the MCP2515 chip
@@ -57,8 +57,8 @@ EFFECTS:
 #define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
 // NOTE: see below for the #include "ACan/ACan.h" line and uncomment if ACan.h wanted.  
 
-#include <ACan.h>           // uses local ACan class, comment out if using GCSerial
-//#define NOCAN                     // comment out if default CAN driver wanted
+//#include <ACan.h>           // uses local ACan class, comment out if using GCSerial
+#define NOCAN                     // comment out if default CAN driver wanted
 
 #define OLCB_NO_BLUE_GOLD  // don't want Blue/Gold
 
