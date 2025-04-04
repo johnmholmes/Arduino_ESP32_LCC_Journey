@@ -3,8 +3,8 @@
    N Action eventids
    each:
    -- pin number from 3,4,5,6,7,8,9,A0,A1,A2,A3,A4,A5
-   -- Actions from: Low, High, Flash, Double Strobe, Random, Fire, FireOff
-      Fire uses two consecutive channels.
+   -- Actions from: Low, High, Flash, Double Strobe, Random, Fire
+   Fire uses two consecutive channels.
    -- two parameters: durn and rate
       -- each in steps of 100ms
       -- for fire, these determing the brightness of the two channels. 
@@ -22,7 +22,7 @@ EFFECTS:
  Random: alternates the pin between high and low
     Parameter 1: a random period the pin in held high, between 20ms and 20min
     Parameter 2: a random period the pin in held low, between 20ms and 20min
-    Note the random period is between the half and the whol eof the chosen period.
+    Note the random period is between the half and the whole of the chosen period.
     Eg: if the chosen period is 30 sec, then the random periods will be 
         between 25 sec and 30 sec.  
     This should work well for house lights for example.  
@@ -31,7 +31,7 @@ EFFECTS:
     You may have to chose higher values to see an effect, as values below a 
     threshold may not light the LED.  
     Parameter 1: sets the randomness of the first pin of the pair 
-    Parameter 2: sets the randomness of the seocnd pin of the pair 
+    Parameter 2: sets the randomness of the second pin of the pair 
 
 */
 
