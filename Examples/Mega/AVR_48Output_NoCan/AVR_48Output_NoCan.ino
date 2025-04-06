@@ -371,7 +371,7 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func) {
 
 #include "OpenLCBMid.h"           // System house-keeping
 
-enum Action { aLOW=1, aHIGH, aFLASH, aDSTROBE, aRANDOM, aFIRE, aFIREOFF };
+enum Action { aLOW=1, aHIGH, aFLASH, aDSTROBE, aRANDOM, aFIRE };
 void doActions() {
   static uint8_t i = 255;
   uint8_t pi, actn, rate, durn; 
