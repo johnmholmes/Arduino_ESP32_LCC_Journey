@@ -3,8 +3,8 @@
 //  Moved initialization of curpos (may have been overwriting things!)
 /*
 This is my test version for demonstration CAN Bus use only by John Holmes
-  - Pins 4 & 5 RX and TX for the transceiver module
-  - Pins 14,27,26,25,15,2,4,16 are used for input or output
+  - Pins 32 RX and 26 TX for the transceiver module
+  - Pins 14,27,25,33,21,22,15,2 are used for input or output
   - Pins 13,12 servos
 
 */
@@ -42,8 +42,8 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
 
-#define ESPcan_RXPIN 4
-#define ESPcan_TXPIN 5
+#define ESPcan_RXPIN 32
+#define ESPcan_TXPIN 26
 
 // Board definitions
 #define MANU "OpenLCB"           // The manufacturer of node
@@ -221,9 +221,9 @@ uint8_t servopin[NUM_SERVOS] = {33,32};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {14,27,26,25,15,2,4,16}; 
+  uint8_t iopin[NUM_IO] = {14,27,25,33,21,22,15,2 }; 
 #else
-  uint8_t iopin[NUM_IO] = {14,27,26,25,15,2,4,16};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {14,27,25,33,21,22,15,2 };  // use free pins on MERG CAN board
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
