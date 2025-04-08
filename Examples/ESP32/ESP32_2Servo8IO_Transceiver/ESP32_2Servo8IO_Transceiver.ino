@@ -2,14 +2,14 @@
 //  Use update and update16 instead of write to reduce EEPROM wear
 //  Moved initialization of curpos (may have been overwriting things!)
 /*
-This is my test version for demonstration  NO CAN Bus use only by John Holmes
+This is my test version for demonstration CAN Bus use only by John Holmes
   - Pins 4 & 5 RX and TX for the transceiver module
   - Pins 14,27,26,25,15,2,4,16 are used for input or output
   - Pins 13,12 servos
 
 */
 //==============================================================
-// AVR 2Servos NIO using ACAN
+// AVR 2Servos NIO using ESPcan
 //
 // Coprright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
@@ -42,19 +42,14 @@ This is my test version for demonstration  NO CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
 
-// New ACan for MCP2515
-//#define ACAN_FREQ 8000000UL   // set for crystal freq feeding the MCP2515 chip
-//#define ACAN_CS_PIN 10        // set for the MCP2515 chip select pin, usually 10 on Nano
-//#define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
-//#define ACAN_RX_NBUF 2        // number of receive buffers
-//#define ACAN_TX_NBUF 2        // number of transmit buffers
-//#include <ACan.h>             // uses main library ACan class, comment out if using GCSerial
+#define ESPcan_RXPIN 4
+#define ESPcan_TXPIN 5
 
 // Board definitions
-#define MANU "OpenLCB"        // The manufacturer of node
-#define MODEL "AVR2Servo8IO"  // The model of the board
-#define HWVERSION "0.1"       // Hardware version
-#define SWVERSION "0.1"       // Software version
+#define MANU "OpenLCB"           // The manufacturer of node
+#define MODEL "ESP32_2Servo8IO"  // The model of the board
+#define HWVERSION "0.1"          // Hardware version
+#define SWVERSION "0.1"          // Software version
 
 // To set a new nodeid edit the next line
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x03
