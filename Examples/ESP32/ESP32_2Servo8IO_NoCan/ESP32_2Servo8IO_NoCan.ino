@@ -4,8 +4,8 @@
 /*
 This is my test version for demonstration  NO CAN Bus use only by John Holmes
 
-  - Pins 14,27,26,25,15,2,4,16 are used for input or output
-  - Pins 13,12 servos
+  - Pins 14,27,25,33,21,22,15,2 are used for input or output
+  - Pins 12,13 servos
 
 */
 //==============================================================
@@ -42,12 +42,6 @@ This is my test version for demonstration  NO CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 #include "GCSerial.h"
 
-// New ACan for MCP2515
-#define ACAN_FREQ 8000000UL   // set for crystal freq feeding the MCP2515 chip
-#define ACAN_CS_PIN 10        // set for the MCP2515 chip select pin, usually 10 on Nano
-#define ACAN_INT_PIN 2        // set for the MCP2515 interrupt pin, usually 2 or 3
-#define ACAN_RX_NBUF 2        // number of receive buffers
-#define ACAN_TX_NBUF 2        // number of transmit buffers
 //#include <ACan.h>             // uses main library ACan class, comment out if using GCSerial
 
 // Board definitions
@@ -222,13 +216,13 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 #include <ESP32Servo.h>
 Servo servo[2];
 uint8_t servodelay;
-uint8_t servopin[NUM_SERVOS] = {33,32};
+uint8_t servopin[NUM_SERVOS] = {12,13};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {14,27,26,25,15,2,4,16}; 
+  uint8_t iopin[NUM_IO] = {14,27,25,33,21,22,15,2}; 
 #else
-  uint8_t iopin[NUM_IO] = {14,27,26,25,15,2,4,16};  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {14,27,25,33,21,22,15,2;  // use free pins on MERG CAN board
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
@@ -472,7 +466,7 @@ void servoSet() {
     //uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
     uint8_t cpos = curpos[i];
     dP("\n cpos="); dP(cpos);
-    servoTarget[i] = 5+ NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
+    servoTarget[i] = NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
     dP("\n target="); dP(servoTarget[i]);
   }
 }
