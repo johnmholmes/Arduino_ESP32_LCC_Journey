@@ -5,7 +5,7 @@
 This is my test version for demonstration CAN Bus use only by John Holmes
   - Pins 32 RX and 26 TX for the transceiver module
   - Pins 14,27,25,33,21,22,15,2 are used for input or output
-  - Pins 13,12 servos
+  - Pins 12,13 servos
 
 */
 //==============================================================
@@ -217,7 +217,7 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 #include <ESP32Servo.h>
 Servo servo[2];
 uint8_t servodelay;
-uint8_t servopin[NUM_SERVOS] = {33,32};
+uint8_t servopin[NUM_SERVOS] = {12,13};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
 #ifdef NOCAN
@@ -467,7 +467,7 @@ void servoSet() {
     //uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
     uint8_t cpos = curpos[i];
     dP("\n cpos="); dP(cpos);
-    servoTarget[i] = 5+ NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
+    servoTarget[i] = NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
     dP("\n target="); dP(servoTarget[i]);
   }
 }
