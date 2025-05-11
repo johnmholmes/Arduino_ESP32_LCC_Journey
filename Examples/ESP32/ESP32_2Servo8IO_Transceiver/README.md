@@ -1,10 +1,5 @@
-# AVR 2-Servo N-IO Example, with toggle and ACan class
+# ESP32 2-Servo 8-IO Example.
 
-This sketch was written for a Nano or other ATMega328.  
-However, any AVR, with an appropriate  MCP2515 based CAN board, can be used.  
-Here is an example CAN board: 
-  https://www.amazon.ca/Comidox-MCP2515-Receiver-Controller-Development/dp/B07J9KZ4L4
-In addition, direct via USB using GCSerial or connection via Wifi are possible on a ESP32 or Pico-W.  
 
 This sketch implements:
 * two servos, each with three positions
@@ -23,12 +18,10 @@ It demonstrates:
 * Eventid processing to set a servo's position, see: **pceCallback(unsigned int index)**
 * Sampling of inputs and producing events.
 
-This sketch is configured to use the ACAN2515 library and the ACan class.
-This lets one set the clock frequency of the attached MCP2515, and also its CS and INT pins.  
+This sketch is configured to use the ACAN_ESP32Can.h library that has been changed by David Harris.
 
-This sketch will run on the AVR Mega, & these with minor changes ESP32, Pico, and Tiva processor boards.  These 
-all have more memory and the sketches capabilities could be extended.  
+This sketch is tested on the DOIT ESP32 DEVKIT V1 and the sn65hvd230 transceiver module.  
 
-Pin usage will need to be adapted to the board. Sample pin usage is included for the Nano. 
+
 
 
