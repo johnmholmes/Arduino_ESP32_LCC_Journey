@@ -42,8 +42,9 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
 
-#define ESPcan_RXPIN 32
-#define ESPcan_TXPIN 26
+#define ACAN_ESP32_TX_PIN GPIO_NUM_26
+#define ACAN_ESP32_RX_PIN GPIO_NUM_32
+#include "ACAN_ESP32Can.h"
 
 // Board definitions
 #define MANU "OpenLCB"           // The manufacturer of node
