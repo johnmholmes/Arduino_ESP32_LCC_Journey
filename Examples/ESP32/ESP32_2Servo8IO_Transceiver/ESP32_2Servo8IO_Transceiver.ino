@@ -1,4 +1,8 @@
-/*This is in beta testing but here to give a chance to have a look
+/* Pin changes due to issues found 24 May
+
+  Report bugs if anything is found
+
+  This is in beta testing but here to give a chance to have a look
   at the sketch
 
   2025.08.25 changes: Can Transceiver Version Only
@@ -6,9 +10,9 @@
   Moved initialization of curpos (may have been overwriting things!)
 
 This is my test version for demonstration CAN Bus use only by John Holmes
-  - Pins 22 RX and 23 TX for the transceiver module
-  - Pins 14,27,26,32,21,15,4,16  are used for input or output
-  - Pins 13,12 servos
+  - Pins 19 RX and 18 TX for the transceiver module
+  - Pins 14,27,26,32,15,4,16,23  are used for input or output
+  - Pins 25,33 servos
 
 */
 //==============================================================
@@ -45,8 +49,8 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
 
-#define ACAN_ESP32_TX_PIN GPIO_NUM_26
-#define ACAN_ESP32_RX_PIN GPIO_NUM_32
+#define ACAN_ESP32_TX_PIN GPIO_NUM_18
+#define ACAN_ESP32_RX_PIN GPIO_NUM_19
 #include "ACAN_ESP32Can.h"
 
 // Board definitions
@@ -221,13 +225,13 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 #include <ESP32Servo.h>
 Servo servo[2];
 uint8_t servodelay;
-uint8_t servopin[NUM_SERVOS] = {13,12};
+uint8_t servopin[NUM_SERVOS] = {25,33};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
 #ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {14,27,26,32,21,15,4,16 }; 
+  uint8_t iopin[NUM_IO] = {14,27,26,32,15,4,16,23  }; 
 #else
-  uint8_t iopin[NUM_IO] = {14,27,26,32,21,15,4,16 };  // use free pins on MERG CAN board
+  uint8_t iopin[NUM_IO] = {14,27,26,32,15,4,16,23  };  // use free pins on MERG CAN board
 #endif
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
