@@ -1,4 +1,4 @@
-# AVR 47-IO Example, 
+# AVR 47-IO Example.
 
 This sketch was written for a Mega
 This sketch implements:
