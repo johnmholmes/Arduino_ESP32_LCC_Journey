@@ -2,6 +2,8 @@
 #ifndef ARDUINO_ARCH_ESP32
   #error "Select an ESP32 board"
 #endif
+
+#ifndef NOCAN
 #define NOCAN
 
 #pragma message "Compiling ACAN_ESP32Can.h"
@@ -23,8 +25,8 @@ class OlcbCanClass : public OlcbCan  {
     virtual void init() {                    // initialization
       //P("\n ACAN_ESP32 init");
       ACAN_ESP32_Settings settings(125000L);
-      settings.mRxPin = ACAN_ESP32_RX_PIN;
-      settings.mTxPin = ACAN_ESP32_TX_PIN;
+      settings.mRxPin = CAN_RX_PIN;
+      settings.mTxPin = CAN_TX_PIN;
       settings.mRequestedCANMode = ACAN_ESP32_Settings::NormalMode;
       if( !ACAN_ESP32::can.begin(settings) ) return;
       //P("\n ACAN_ESP32 init'd");
@@ -51,8 +53,8 @@ class OlcbCanClass : public OlcbCan  {
       frame.len = length;
       memcpy(frame.data, data, length);
       while(!ACAN_ESP32::can.tryToSend(frame));
-      P(" OK");
-      delay(10);
+      //P(" OK");
+      delay(5);
       return 1;
     }
     virtual uint8_t write() {               // write(0), ie write immediately
@@ -61,4 +63,4 @@ class OlcbCanClass : public OlcbCan  {
     bool active;                          // flag net activity
 };
 
-
+#endif

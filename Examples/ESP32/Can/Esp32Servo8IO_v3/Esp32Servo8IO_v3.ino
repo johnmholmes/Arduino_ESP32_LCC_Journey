@@ -49,9 +49,11 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //    ( Note: disable debugging if this is chosen. )
 //#include "GCSerial.h"
 
-#define ACAN_ESP32_TX_PIN GPIO_NUM_18
-#define ACAN_ESP32_RX_PIN GPIO_NUM_19
-#include "ACAN_ESP32Can.h"
+// Choose a board, uncomment one line, see boards.h
+#define ESP32_BOARD
+//#define ATOM_BOARD
+//#define MINIMA_BOARD
+#include "boards.h"
 
 // Board definitions
 #define MANU "OpenLCB"           // The manufacturer of node
@@ -64,14 +66,14 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
+#define RESET_TO_FACTORY_DEFAULTS 0
 
-// If you want the servopositions save, every x ms, set SAVEPERIOD > 0. 
-// 300000 would be every 30 minutes, the EEPROM should last > 5 years. 
+// If you want the servopositions save, every x*x seconds, set saveperiod > 0. 
+// x = 190 would be every 36100s or 30 minutes, the EEPROM should last > 5 years. 
 // Note: a write will not be done when the servo position has not changed. 
-#define SAVEPERIOD 300000
 
 // User defs
+#define OLCB_NO_BLUE_GOLD
 #define NUM_SERVOS 2
 #define NUM_POS 3
 #define NUM_IO 8
@@ -99,6 +101,7 @@ const char configDefInfo[] PROGMEM =
           <min>5</min><max>50</max>
           <hints><slider tickSpacing='15' immediate='yes' showValue='yes'> </slider></hints>
         </int>
+        <int size='1'><name>Save servo positions every x*x= seconds</name></int>
     </group>
     <group replication=')" N(NUM_SERVOS) R"('>
         <name>Servos</name>
@@ -158,6 +161,7 @@ const char configDefInfo[] PROGMEM =
           char nodeDesc[24];  // optional node-description, used by ACDI
       // ===== Enter User definitions below =====
           uint8_t servodelay;
+          uint8_t saveperiod; // period in seconds to save teh servo positions
           struct {
             char desc[8];        // description of this Servo Turnout Driver
             struct {
@@ -206,33 +210,12 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
         0, 0, 0, 0                                                                                           // remaining 4 bytes
     };
 
-#define OLCB_NO_BLUE_GOLD  // blue/gold not used in this sketch
-#ifndef OLCB_NO_BLUE_GOLD
-    #define BLUE 40  // built-in blue LED
-    #define GOLD 39  // built-in green LED
-    ButtonLed blue(BLUE, LOW);
-    ButtonLed gold(GOLD, LOW);
-    
-    uint32_t patterns[8] = { 0x00010001L, 0xFFFEFFFEL }; // two per channel, one per event
-    ButtonLed pA(13, LOW);
-    ButtonLed pB(14, LOW);
-    ButtonLed pC(15, LOW);
-    ButtonLed pD(16, LOW);
-    ButtonLed* buttons[8] = { &pA,&pA,&pB,&pB,&pC,&pC,&pD,&pD };
-#endif // OLCB_NO_BLUE_GOLD
 
-//#include <Servo.h>
-#include <ESP32Servo.h>
-Servo servo[2];
+Servo servo[NUM_SERVOS];
 uint8_t servodelay;
-uint8_t servopin[NUM_SERVOS] = {25,33};
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
-#ifdef NOCAN
-  uint8_t iopin[NUM_IO] = {14,27,26,32,15,4,16,23  }; 
-#else
-  uint8_t iopin[NUM_IO] = {14,27,26,32,15,4,16,23  };  // use free pins on MERG CAN board
-#endif
+
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
@@ -240,9 +223,10 @@ unsigned long next[NUM_IO] = {0};
 // This is called to initialize the EEPROM to Factory Reset
 void userInitAll()
 { 
-  NODECONFIG.put(EEADDR(nodeName), ESTRING("AVR Nano"));
+  NODECONFIG.put(EEADDR(nodeName), ESTRING("Esp32"));
   NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO"));
-  NODECONFIG.update(EEADDR(servodelay), 50);
+  NODECONFIG.update(EEADDR(servodelay), 20);
+  NODECONFIG.update(EEADDR(saveperiod), 20);   // 3-> 9 seconds, 20-> 400 seconds
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
@@ -256,12 +240,13 @@ void userInitAll()
     NODECONFIG.update(EEADDR(io[i].duration), 0);
     NODECONFIG.update(EEADDR(io[i].period), 0);
   }  
+  EEPROMcommit;
 }
 
 // determine the state of each eventid
 enum evStates { VALID=4, INVALID=5, UNKNOWN=7 };
 uint8_t userState(uint16_t index) {
-  //dP("\n userState "); dP((uint16_t) index);
+  dP("\n userState "); dP((uint16_t) index);
     if(index < NUM_SERVOS*NUM_POS) {
       int ch = index/3;
       int pos = index%3;
@@ -288,11 +273,12 @@ void pceCallback(uint16_t index) {
   #define PV(x) { dP(" " #x "="); dP(x); }
   dP("\npceCallback, index="); dP((uint16_t)index);
     if(index<NUM_SERVOS*NUM_POS) {
-      uint8_t outputIndex = index / 3;
-      uint8_t outputState = index % 3;
-      curpos[outputIndex] = outputState;
-      servo[outputIndex].attach(servopin[outputIndex]);
-      servoTarget[outputIndex] = NODECONFIG.read( EEADDR(servos[outputIndex].pos[outputState].angle) );
+      uint8_t n = index / 3;
+      uint8_t p = index % 3;
+      curpos[n] = p;
+      servoTarget[n] = NODECONFIG.read( EEADDR(servos[n].pos[p].angle) );
+      //servoSet();
+      dP("\n servo#"); dP(n); dP(" position#"); dP(p); dP(" target angle="); dP(servoTarget[n]); 
     } else {
       uint8_t n = index-NUM_SERVOS*NUM_POS;
       uint8_t type = NODECONFIG.read(EEADDR(io[n/2].type));
@@ -317,33 +303,8 @@ void pceCallback(uint16_t index) {
       }
     }
 }
+void printMem();
 
-// === Process servos ===
-// This is called from loop to service the servos
-void servoProcess() {
-  static long last = 0;
-  if( (millis()-last) < servodelay ) return;
-  last = millis();
-  for(int i=0; i<NUM_SERVOS; i++) {
-    if(servoTarget[i] > servoActual[i] ) {
-      if(!servo[i].attached()) servo[i].attach(servopin[i]);
-      servo[i].write(servoActual[i]++);
-    } else if(servoTarget[i] < servoActual[i] ) {
-      if(!servo[i].attached()) servo[i].attach(servopin[i]); 
-      servo[i].write(servoActual[i]--);
-    } else if(servo[i].attached()) servo[i].detach(); 
-  }
-  #if SAVEPERIOD > 0
-    static long lastsave = 0;
-    if( (millis()-lastsave) > SAVEPERIOD ) {
-      lastsave = millis();
-      for(int i=0; i<NUM_SERVOS; i++) 
-        NODECONFIG.update( EEADDR(curpos[i]), curpos[i]);
-      dP("\n Pos saved");
-    }
-  #endif
-
-}
 
 // ==== Process Inputs ====
 void produceFromInputs() {
@@ -414,17 +375,19 @@ void userHardReset() {}
 
 #include "OpenLCBMid.h"    // Essential, do not move or delete
 
-#if 0
+#if 1
 #define P(...) Serial.print( __VA_ARGS__)
 #define PV(x) { P(" "); P(#x  "="); P(x); }
 #define PVL(x) { P("\n"); P(#x  "="); P(x); }
 void printMem() {
   PVL(NODECONFIG.read(EEADDR(servodelay)));
+  PVL(NODECONFIG.read(EEADDR(saveperiod)));
   for(int s=0;s<NUM_SERVOS;s++) {
-    P("\nServo "); P(s);
-    for(int p=0;p<NUM_POS;p++) {
-      PV(NODECONFIG.read(EEADDR(servos[s].pos[p])));
-    }
+    P("\nServo "); P(s); 
+    uint8_t curpos = NODECONFIG.read(EEADDR(curpos[s])); PV(curpos);
+    uint8_t angle1 = NODECONFIG.read(EEADDR(servos[s].pos[0].angle)); PV(angle1);
+    uint8_t angle2 = NODECONFIG.read(EEADDR(servos[s].pos[1].angle)); PV(angle2);
+    uint8_t angle3 = NODECONFIG.read(EEADDR(servos[s].pos[2].angle)); PV(angle3);
   }
   /*
   for(int i=0;s<NUM_IO;i++) {
@@ -446,39 +409,82 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
   dPS(" Func: ", (uint8_t)func);
+  EEPROMcommit;
+  servodelay = NODECONFIG.read( EEADDR( servodelay ) );
   setupIOPins();
   servoSet();
 }
 
-// Reinitialize servos to their current positions
-// Called from setup() and after every configuration change
-void servoSetup() {
-  for(uint8_t i = 0; i < NUM_SERVOS; i++) {
-    #if SAVEPERIOD > 0
-      curpos[i] = NODECONFIG.read( EEADDR( curpos[i] ) ); 
-    #else 
-      curpos[i] = 0;
-      dP("\nset curpos=0");
-    #endif
-    //servoActual[i] = 90;
-    servoActual[i] = NODECONFIG.read(EEADDR(servos[i].pos[1].angle)); // orginal 0 trying 1
+// SERVO ROUTINES
+// retrieve svaePeriod
+uint32_t getSavePeriod() {
+  uint32_t saveperiod = NODECONFIG.read( EEADDR(saveperiod) );
+  return saveperiod * saveperiod * 1000;
+}
+// On startup: set curpos[i] to 1 and set servo to 90 or saved angle
+void servoStartUp() {
+  servodelay = NODECONFIG.read( EEADDR( servodelay ) );
+  for(int i=0; i<NUM_SERVOS; i++) {
+    if(getSavePeriod()==0) curpos[i] = 1; // middle position
+    else curpos[i] = NODECONFIG.read( EEADDR( curpos[i] ) );
+    if( USE_90_ON_STARTUP ) servoActual[i] = 90;
+    else servoActual[i] = NODECONFIG.read( EEADDR( servos[i].pos[curpos[i]].angle ) );
     servo[i].attach(servopin[i]);
-    servo[i].write( servoActual[i] );
-    dP("\n actual="); dP(servoActual[i]);
+    servo[i].write(servoActual[i]);
+    delay(100);
   }
   servoSet();
 }
 // Allow Servo adjustments
 void servoSet() {
-  servodelay = NODECONFIG.read( EEADDR( servodelay) );
-  for(uint8_t i = 0; i < NUM_SERVOS; i++) {
-    //uint8_t cpos = NODECONFIG.read( EEADDR(curpos[i]) );
-    uint8_t cpos = curpos[i];
-    dP("\n cpos="); dP(cpos);
-    servoTarget[i] = NODECONFIG.read( EEADDR(servos[i].pos[cpos].angle) );
-    dP("\n target="); dP(servoTarget[i]);
+  for(int i=0; i<NUM_SERVOS; i++) {
+    servoTarget[i] = NODECONFIG.read( EEADDR( servos[i].pos[curpos[i]].angle ) );
   }
 }
+// === Process servos ===
+// This is called from loop to service the servos
+bool posdirty = false;
+void servoProcess() {
+  static long last = 0;
+  if( (millis()-last) < servodelay ) return;
+  last = millis();
+  static long lastmove = 0;
+  for(int i=0; i<NUM_SERVOS; i++) {
+    if(servoTarget[i] == servoActual[i] ) continue;
+    if(servoTarget[i] > servoActual[i] ) servoActual[i]++;
+    else if(servoTarget[i] < servoActual[i] ) servoActual[i]--;
+    if(!servo[i].attached()) { 
+      servo[i].attach(servopin[i]);
+      delay(100);
+    }
+    //servo[i].attach(servopin[i]);
+    servo[i].write(servoActual[i]);
+    P("\n servomove"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
+    lastmove = millis();
+    posdirty =true;
+  }
+
+  if( lastmove && (millis()-lastmove)>4000) {
+    for(int i=0; i<NUM_SERVOS; i++) servo[i].detach();
+    lastmove = 0;
+    dP("\n detach()");
+    printMem();
+  }
+
+  static long lastsave = 0;
+  uint32_t saveperiod = getSavePeriod();
+  if(saveperiod && posdirty && (millis()-lastsave) > saveperiod ) {
+    lastsave = millis();
+    posdirty = false;
+    //for(int i=0; i<NUM_SERVOS; i++) 
+    //  NODECONFIG.update( EEADDR(curpos[i]), curpos[i]);
+    for(int i=0; i<NUM_SERVOS; i++) NODECONFIG.update( EEADDR(curpos[i]), curpos[i]);
+    EEPROMcommit;
+    dP("\n save curpos\n curpos[0]="); dP(NODECONFIG.read( EEADDR(curpos[0])));
+    dP("\n curpos[1]="); dP(NODECONFIG.read( EEADDR(curpos[1])));
+  }
+}
+
 
 // Setup the io pins
 // called by setup() and after a configuration change
@@ -551,12 +557,30 @@ void setup()
   #ifdef DEBUG
     Serial.begin(115200); while(!Serial);
     delay(500);
-    dP("\n AVR-2Servo8IO");
+    dP("\n 2Servo8IO");
   #endif
-
+  EEPROMbegin;
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
   Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
-  servoSetup();
+
+  dP("\n MemStruct size= "); dP((uint16_t)sizeof(MemStruct));
+
+  #if 0
+    servo[0].attach( servopin[0] );
+    servo[1].attach( servopin[1] );
+    while(1) {
+      P("\nA");
+      servo[0].write(90);
+      servo[1].write(120);
+      delay(500);
+      P("\nB");
+      servo[0].write(120);
+      servo[1].write(90);
+      delay(500);
+    }
+  #endif
+
+  servoStartUp();
   setupIOPins();
   dP("\n NUM_EVENT="); dP(NUM_EVENT);
 }
@@ -564,18 +588,6 @@ void setup()
 // ==== Loop ==========================
 void loop() {
   bool activity = Olcb_process();
-  #ifndef OLCB_NO_BLUE_GOLD
-    if (activity) {
-      blue.blink(0x1); // blink blue to show that the frame was received
-    }
-    if (olcbcanTx.active) {
-      gold.blink(0x1); // blink gold when a frame sent
-      olcbcanTx.active = false;
-    }
-    // handle the status lights
-    gold.process();
-    blue.process();
-  #endif // OLCB_NO_BLUE_GOLD
   produceFromInputs();  // scans inputs and generates events on change
   appProcess();         // processes io pins, eg flashing
   servoProcess();       // processes servos, moves them to their target
