@@ -6,4 +6,4 @@ They are in the very early stages of development. So bugs maybe found during tes
 
 ## Bug report email
 
-johnmholmes@tiscali.co.uk
+johnmarkholmes.jh@gmail.com
