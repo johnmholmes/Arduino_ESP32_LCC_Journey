@@ -12,4 +12,4 @@ They demonstrates:
 
 ## Bug report email
 
-johnmholmes@tiscali.co.uk
+johnmarkholmes.jh@gmail.com
