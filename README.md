@@ -20,7 +20,7 @@
 
 ## Bug Reports 
 
-Please raise bug reports via johnmholmes@tiscali.co.uk
+Please raise bug reports via johnmarkholmes.jh@gmail.com
 
 ----
 
