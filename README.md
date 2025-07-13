@@ -10,10 +10,11 @@
 
 ----
 
-## 11th/May/2025 Update
+## 13th/July/2025 Update
 
-- The ESP32 examples will be getting updated over the next few weeks as I have a Can bus version working with the SN65hvd230 3.3 volt transceiver module.
-- Arduino Mega Sketch added for 47 I/O usage for Mimic panels, it only has the USB GCSerial connection setup at the moment for testing. I also have been testing 53 version for a mimic panel I need.
+The ESP32 examples are being replaced as improved versions are being tested. The Wiki pages will also see changes being made to them.
+
+
 
 ----
 
