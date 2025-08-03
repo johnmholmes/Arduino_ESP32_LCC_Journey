@@ -10,11 +10,9 @@
 
 ----
 
-## 13th/July/2025 Update
+## 3 August/2025 Update
 
-The ESP32 examples are being replaced as improved versions are being tested. The Wiki pages will also see changes being made to them.
-
-
+The ESP32 examples are changing the first ones will be the Can bus versions. The is a change to the file structure which will be documented. We now have a config.h This has been done as the sketch is designed to run on various MCU's. I still plan to have set MCU version in this repository.
 
 ----
 
