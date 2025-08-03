@@ -1,11 +1,10 @@
-# ESP32 2-Servo 8-IO Example.
-
+# ESP32 2-Servo 24-IO Example.
 
 This sketch implements:
 * two servos, each with three positions
    Positions cabe set to angles 0-180
    The 0 and 180 end-points of the servos can be configured.
-* N i/o channels, each of which can be an input or an output,
+* 24 i/o channels, each of which can be an input or an output,
    If an output it may be solid, pulse or flashing, and consumes an on- and 0ff-event. 
    If an input it produces an on- and off-event, which may each be delayed.  The 
      inputs can be with or with pullups, inverted or not, or can be toggle. 
@@ -22,6 +21,12 @@ This sketch is configured to use the ACAN_ESP32Can.h library that has been chang
 
 This sketch is tested on the DOIT ESP32 DEVKIT V1 and the sn65hvd230 transceiver module.  
 
+The Servos are connected to pin 25 & 33.
+The 8 native I/O are on pins 14,27,26,32,15,4,16,23 in this order when configuring.
+The 16 MCP23017 pins are split into 2 banks of 8 A0 to A7 and B0 to B7
+The MCP23017 uses the address of 0x27 Pin 21 SDA  Pin 22 SCL.
+
+We now use a config.h tab to change the node ID which is in line 18 of the config.h The factory reset is changed in line 22.
 
 
 
