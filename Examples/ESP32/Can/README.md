@@ -1,8 +1,9 @@
-# ESP32 Can Examples
+# ESP32 Can Examples as of 3rd August 2025
 
-These sketches are for the ESP32 while they may work on other MCUs. 
+We now use a config.h file to alter the node id number and the factory reset.
 
-They are in the very early stages of development. So bugs maybe found during testing and will be amended as quickly as possible. However if you find anything please contact me.
+![Screenshot 2025-08-03 142003](https://github.com/user-attachments/assets/6ca07b91-0b6b-4835-8892-70761e92e228)
+
 
 ## Bug report email
 
