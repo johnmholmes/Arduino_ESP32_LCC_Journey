@@ -40,33 +40,11 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //       - On-delay: delay before on-event is sent
 //       - Off-delay: the period before the off-event is sent
 //
+//  THis code should be easily extended to more than 2 servos and 8 io.
 //==============================================================
 
-// Debugging -- uncomment to activate debugging statements:
-//#define DEBUG Serial
-
-// Allow direct to JMRI via USB, without CAN controller, comment out for CAN
-//    ( Note: disable debugging if this is chosen. )
-//#include "GCSerial.h"
-
-// Choose a board, uncomment one line, see boards.h
-#define ESP32_BOARD
-//#define ATOM_BOARD
-//#define MINIMA_BOARD
-#include "boards.h"
-
-// Board definitions
-#define MANU "OpenLCB"           // The manufacturer of node
-#define MODEL "ESP32_2Servo8IO"  // The model of the board
-#define HWVERSION "0.1"          // Hardware version
-#define SWVERSION "0.1"          // Software version
-
-// To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x03
-
-// To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
-// Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#include "Config.h"   // Contains configuration, see "Config.h"
+#include "Boards.h"   // Contains Board defintions, see "BBoards.h"
 
 // If you want the servopositions save, every x*x seconds, set saveperiod > 0. 
 // x = 190 would be every 36100s or 30 minutes, the EEPROM should last > 5 years. 
@@ -74,15 +52,10 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 
 // User defs
 #define OLCB_NO_BLUE_GOLD
-#define NUM_SERVOS 2
-#define NUM_POS 3
-#define NUM_IO 8
-
-#define NUM_EVENT NUM_SERVOS * NUM_POS + NUM_IO*2
 
 #include "mdebugging.h"           // debugging
-#include "processCAN.h"           // Auto-select CAN library
-#include "processor.h"            // auto-selects the processor type, EEPROM lib etc.
+//#include "processCAN.h"           // Auto-select CAN library
+//#include "processor.h"            // auto-selects the processor type, EEPROM lib etc.
 #include "OpenLCBHeader.h"        // System house-keeping.
 
 // CDI (Configuration Description Information) in xml, must match MemStruct
@@ -187,14 +160,10 @@ uint8_t curpos[NUM_SERVOS];
 
 extern "C" {
     // ===== eventid Table =====
-    #define REG_SERVO_OUTPUT(s) CEID(servos[s].pos[0].eid), CEID(servos[s].pos[1].eid), CEID(servos[s].pos[2].eid)
-    #define REG_IO(i) PCEID(io[i].onEid), PCEID(io[i].offEid)
-    
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
-        REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
-        REG_IO(0), REG_IO(1), REG_IO(2), REG_IO(3), REG_IO(4), REG_IO(5), REG_IO(6), 
-        REG_IO(7), 
+        SERVOEID(NUM_SERVOS),
+        IOEID(NUM_IO)
     };
     
     // SNIP Short node description for use by the Simple Node Information Protocol
@@ -215,10 +184,22 @@ Servo servo[NUM_SERVOS];
 uint8_t servodelay;
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
+uint8_t servopin[]  = { SERVOPINS };
+uint8_t iopin[] = { IOPINS };
 
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
+
+void reportConfig() {
+  dP("\n 2Servo8IO");
+  dP("\nFile: " __FILE__);
+  dP("\nUsing " BOARD);
+  dP("\nNode ID="); dP(TOSTRING((NODE_ADDRESS)));
+  dP("\nServo pins:"); for(int i=0; i<2; i++) { dP(" "); dP(servopin[i]); }
+  dP("\nIO pins:"); for(int i=0; i<sizeof(iopin); i++) { dP(" "); dP(iopin[i]); }
+  dP("\nCAN pins: Tx="); dP(CAN_TX_PIN); dP(" RX="); dP(CAN_RX_PIN);
+}
 
 // This is called to initialize the EEPROM to Factory Reset
 void userInitAll()
@@ -226,7 +207,7 @@ void userInitAll()
   NODECONFIG.put(EEADDR(nodeName), ESTRING("Esp32"));
   NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos8IO"));
   NODECONFIG.update(EEADDR(servodelay), 20);
-  NODECONFIG.update(EEADDR(saveperiod), 20);   // 3-> 9 seconds, 20-> 400 seconds
+  NODECONFIG.update(EEADDR(saveperiod), 190);   // 3-> 9 seconds, 20-> 400 seconds
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
     NODECONFIG.put(EEADDR(servos[i].desc), ESTRING(""));
     for(int p=0; p<NUM_POS; p++) {
@@ -554,14 +535,16 @@ void appProcess() {
 // ==== Setup does initial configuration ======================
 void setup()
 {
-  #ifdef DEBUG
+  //#ifdef DEBUG
     Serial.begin(115200); while(!Serial);
-    delay(500);
-    dP("\n 2Servo8IO");
-  #endif
+    delay(2000);
+    dP("\n HiHo");
+  //#endif
   EEPROMbegin;
   NodeID nodeid(NODE_ADDRESS);       // this node's nodeid
+  dP("\nRESET_TO_FACTORY_DEFAULTS="); dP(RESET_TO_FACTORY_DEFAULTS);
   Olcb_init(nodeid, RESET_TO_FACTORY_DEFAULTS);
+  reportConfig();
 
   dP("\n MemStruct size= "); dP((uint16_t)sizeof(MemStruct));
 
@@ -582,7 +565,7 @@ void setup()
 
   servoStartUp();
   setupIOPins();
-  dP("\n NUM_EVENT="); dP(NUM_EVENT);
+  dP("\n setup NUM_EVENT="); dP(NUM_EVENT);
 }
 
 // ==== Loop ==========================
