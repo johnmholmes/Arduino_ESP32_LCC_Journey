@@ -55,7 +55,7 @@ This is my test version for demonstration  NO CAN Bus use only by John Holmes
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 0
+#define RESET_TO_FACTORY_DEFAULTS 1
 
 // If you want the servopositions save, every x ms, set SAVEPERIOD > 0. 
 // 300000 would be every 30 minutes, the EEPROM should last > 5 years. 
