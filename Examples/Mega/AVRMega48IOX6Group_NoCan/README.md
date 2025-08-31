@@ -12,6 +12,8 @@ This sketch implements:
 
 Hardware 
 
+Please note the board you see in the picture has a fault in its design and pin 21 does not work correctly.
+
 ![diymore](https://github.com/user-attachments/assets/652ead3b-30c4-4418-85ac-5b0c8188a793)
 
 
