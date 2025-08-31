@@ -8,7 +8,7 @@ This sketch implements:
      inputs can be with or with pullups, inverted or not, or can be toggle. 
  * Pin used are 3 - 49 + A0
  * Pins used for Can Bus are 2,50,51,52,53
- * We have 6 groups of 8 channels which should make it easier to configure.
+ * We have 6 groups of 10 channels which should make it easier to configure.
 
 Hardware 
 
