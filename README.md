@@ -10,7 +10,7 @@
 
 ----
 
-##31 August/2025 Update
+## 31 August/2025 Update
 
 Added a new Mega sketch for NoCan testing which will be used for scenic lighting and mimic panel work on my layout later this year. We have 63 channels/pins 3 to 49 & A0-A15. Each can be taught to react to 3 events. The max number of events is 190 so you could use less for some pins and more for others if you wished.
 
