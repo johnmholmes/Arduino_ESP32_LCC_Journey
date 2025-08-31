@@ -10,6 +10,12 @@
 
 ----
 
+##31 August/2025 Update
+
+Added a new Mega sketch for NoCan testing which will be used for scenic lighting and mimic panel work on my layout later this year. We have 63 channels/pins 3 to 49 & A0-A15. Each can be taught to react to 3 events. The max number of events is 190 so you could use less for some pins and more for others if you wished.
+
+----
+
 ## 3 August/2025 Update
 
 The ESP32 examples are changing the first ones will be the Can bus versions. The is a change to the file structure which will be documented. We now have a config.h This has been done as the sketch is designed to run on various MCU's. I still plan to have set MCU version in this repository.
