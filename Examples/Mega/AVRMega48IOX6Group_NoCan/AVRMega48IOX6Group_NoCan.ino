@@ -13,7 +13,7 @@ for using the normal Arduino Mega and standard sensor shield.
   - Pins 3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
     31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,A0 are used for input or output
 
-  - Pins A1 to A5 could take us to 53 channels but that is harder to brake up as groups
+  - Pins A1 to A15 could take us to 63 channels but that is harder to brake up as groups
   
 */
 
@@ -57,6 +57,7 @@ for using the normal Arduino Mega and standard sensor shield.
 //#include "ACan.h"            // uses ACan class, comment out if using GCSerial
  
 #include <Wire.h>
+#include "user_config.h"
 
 // Board definitions
 #define MANU "J Holmes"     // The manufacturer of node
@@ -64,18 +65,9 @@ for using the normal Arduino Mega and standard sensor shield.
 #define HWVERSION "0.1"     // Hardware version
 #define SWVERSION "0.1"     // Software version
 
-// To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x10
-
-// To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
-// Need to do this at least once.
-#define RESET_TO_FACTORY_DEFAULTS 1
-
-
 #define NUM_IOSETS 6//(NUM_NATIVE_SET) //+ (NUM_MCP_SET) // 3
 #define NUM_IOPS 8
 #define NUM_IO 48
-
 
 #define NUM_EVENT NUM_IO*2
 
