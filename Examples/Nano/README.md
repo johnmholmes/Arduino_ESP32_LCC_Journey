@@ -14,7 +14,7 @@ This Arduino Nano is the first MCU I investigated for use within LCC. While it d
 
 ----
 
-## x September 2025 Update
+## September 2025 Update
 
 I have reworked the examples with some minor changes from the previous versions. 
 
