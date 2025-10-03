@@ -1,6 +1,6 @@
 ## These examples 
 
-- The sketch that use the fire effect can only use the folowing 7 sets of PWM pins 2, 3, / 4, 5, / 6, 7, / 8, 9, / 10, 11, / 12, 13, / 44, 45 We will look at making it so that they appear seperatly from the other effects, when the next version which should be available later in October or early Novemeber.
+- The sketch that use the fire effect can only use the folowing 7 sets of PWM pins For the fire effect  which would be 3,4 _ 5,6 _ 7,8 _ 9,10 _ 11,12 _ 13,44 _ 45,46 We will look at making it so that they appear seperatly from the other effects, when the next version which should be available later in October or early Novemeber.
 
 
 - Are being reworked at the end of August to use the user_config for setting up the Node IDs and the factory resets.
