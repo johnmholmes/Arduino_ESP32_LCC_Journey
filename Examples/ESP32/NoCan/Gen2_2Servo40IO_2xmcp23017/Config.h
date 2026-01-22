@@ -27,8 +27,8 @@
 #define NUM_SERVOS 2
 #define NUM_POS 3
 //#define NUM_NATIVE_IO 8 see boards
-#define MCP_ADDRESS1 0x27  //// Choose address for first mcp23017 board
-#define MCP_ADDRESS2 0x28  //// Choose address for second mcp23017 board
+#define MCP_ADDRESS1 0x27  //// Choose address for first mcp23017 board Range of address 20 to 27
+#define MCP_ADDRESS2 0x26  //// Choose address for second mcp23017 board
 #define NUM_MCP_PORTS 4   //// two each on two mcp23017s
 #define NUM_MCP_IO_PER_PORT 8
 #define NUM_MCP_IO (NUM_MCP_PORTS * NUM_MCP_IO_PER_PORT) 
