@@ -31,12 +31,12 @@
 #elif defined(ESP32_BOARD)
   #define BOARD "ESP32"
   //#define NUM_SERVOS 2
-  #define SERVOPINS     25, 33
+  #define SERVOPINS     32, 33
   #define NUM_NATIVE_IO  8
-  #define IOPINS        14,27,26,32,15,4,16,23
+  #define IOPINS        16,17,18,19,14,27,26,25
   #define NUM_IO        24    // calcualte by hand = 8+16
-  #define CAN_TX_PIN (gpio_num_t) 18
-  #define CAN_RX_PIN (gpio_num_t) 19
+  #define CAN_TX_PIN (gpio_num_t) 5
+  #define CAN_RX_PIN (gpio_num_t) 4
   #ifndef USEGCSERIAL
     #include "ACAN_ESP32Can.h"
   #endif // USEGCSERIAL

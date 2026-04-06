@@ -26,7 +26,7 @@
 #define NUM_SERVOS 2
 #define NUM_POS 3
 //#define NUM_NATIVE_IO 8 see boards
-#define MCP_ADDRESS 0x27  //// Choose address for mcp23017 board
+#define MCP_ADDRESS 0x20  //// Choose address for mcp23017 board 0x27 for WaveShare
 #define NUM_MCP_GROUPS 2
 #define NUM_MCP_IO_PER_GROUP 8
 #define NUM_MCP_IO (NUM_MCP_GROUPS * NUM_MCP_IO_PER_GROUP)

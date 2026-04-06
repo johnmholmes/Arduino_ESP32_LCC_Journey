@@ -1,15 +1,15 @@
 
 /*This is in beta testing but here to give a chance to have a look
-  at the sketch
+  at the sketch testing on the layout 6 April 2026
 
   2025.08.25 changes: Can Transceiver Version Only
   Use update and update16 instead of write to reduce EEPROM wear
   Moved initialization of curpos (may have been overwriting things!)
 
 This is my test version for demonstration CAN Bus use only by John Holmes
-  - Pins 19 RX and 18 TX for the transceiver module
-  - Pins 14,27,26,32,15,4,16,23  are used for input or output
-  - Pins 25,33 servos
+  - Pins 4 RX and 5 TX for the transceiver module
+  - Pins 16,17,18,19,14,27,26,25  are used for input or output
+  - Pins 32,33 servos
   - Pin  21 SDA 
   - Pin  22 SCL
 
@@ -99,10 +99,10 @@ const char configDefInfo[] PROGMEM =
           <relation><property>4</property><value>Input with pull-up Inverted</value></relation>
           <relation><property>5</property><value>Toggle</value></relation>
           <relation><property>6</property><value>Toggle with pull-up</value></relation>
-          <relation><property>7</property><value>Output PA</value></relation>
-          <relation><property>8</property><value>Output PA Inverted</value></relation>
-          <relation><property>9</property><value>Output PB</value></relation>
-          <relation><property>10</property><value>Output PB Inverted</value></relation>
+          <relation><property>7</property><value>Output Phase A</value></relation>
+          <relation><property>8</property><value>Output Phase A Inverted</value></relation>
+          <relation><property>9</property><value>Output Phase B</value></relation>
+          <relation><property>10</property><value>Output Phase B Inverted</value></relation>
         </map>
       </int>
       <int size='1'>
@@ -135,10 +135,10 @@ const char configDefInfo[] PROGMEM =
             <relation><property>4</property><value>Input with pull-up Inverted</value></relation>
             <relation><property>5</property><value>Toggle</value></relation>
             <relation><property>6</property><value>Toggle with pull-up</value></relation>
-            <relation><property>7</property><value>Output PA</value></relation>
-            <relation><property>8</property><value>Output PA Inverted</value></relation>
-            <relation><property>9</property><value>Output PB</value></relation>
-            <relation><property>10</property><value>Output PB Inverted</value></relation>
+            <relation><property>7</property><value>Output Phase A</value></relation>
+            <relation><property>8</property><value>Output Phase A Inverted</value></relation>
+            <relation><property>9</property><value>Output Phase B</value></relation>
+            <relation><property>10</property><value>Output Phase B Inverted</value></relation>
           </map>
         </int>
         <int size='1'>
