@@ -16,6 +16,18 @@ Please raise bug reports via johnmarkholmes.jh@gmail.com
 
 ----
 
+## April 18th 2026 Update
+
+Test has started with the new sketch version for the 2 Servo 24 I/O. This has fixed an issue I was seeing with the servo speed setting.
+
+Notes:-
+- On the first configure of the node the servo will go to 90 degree very quickly, and lock in at 90 to allow for the servo and turnout to be installed.
+- You can then move the slider to set your required closed position.
+- To set the thrown position you will need to first trigger the thrown position, once this has been done you can then set the required position for the thrown.
+- Once you have done this afterwards the servos will detach 4 seconds.
+
+----
+
 ## March 28th 2026 Update
 
 The respository is being updated as I finalise the sketches I will be using going forward with my layout. After lots of testing over the past year I will be only developing for the ESP32 Wroom 32. While this is coming to the end of its life in 2031. It will give us time to look at a suitable replacement while using the current sensor shield.
