@@ -1,6 +1,8 @@
 # Arduino Nano, Mega / ESP32 LCC Journey
 
-# Please Use The Wiki for details
+It is important for people finding this repository to understand, these examples are not final products in anyway. I am not a professional programmer or a electronic hardware professional. While I try to make sure I follow best practise. I am very happy for people to offer any suggestions or corrections they feel are needed.
+
+# Please Use The Wiki for more details
 
 ----
 
