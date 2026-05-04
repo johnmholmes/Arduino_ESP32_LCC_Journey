@@ -1,11 +1,9 @@
-
+//This is the final version before release to GitHub.
 /*This is in beta testing but here to give a chance to have a look
   at the sketch
 
-2026 04 17 Minor bug fix to servo speed adjustment
-
 This is my test version for demonstration CAN Bus use only by John Holmes
-  - Pins 4 RX and 5 TX for the transceiver module
+  - Pins 15 RX and 2 TX for the transceiver module will be my default in future.
   - Pins 16,17,18,19,14,27,26,25  are used for input or output
   - Pins 32,33 servos
   - Pin  21 SDA 
@@ -40,7 +38,10 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 //==============================================================
 
 #include "Config.h"   // Contains configuration, see "Config.h"
+
 #include "mdebugging.h"           // debugging
+//#include "processCAN.h"           // Auto-select CAN library
+//#include "processor.h"            // auto-selects the processor type, EEPROM lib etc.
 #include "OpenLCBHeader.h"        // System house-keeping.
 
 // CDI (Configuration Description Information) in xml, must match MemStruct
@@ -119,6 +120,13 @@ const char configDefInfo[] PROGMEM =
       <group replication=')" N(NUM_MCP_IO_PER_GROUP) R"('>
         <name>Port IO</name>
         <repname>0</repname>
+        <repname>1</repname>
+        <repname>2</repname>
+        <repname>3</repname>
+        <repname>4</repname>
+        <repname>5</repname>
+        <repname>6</repname>
+        <repname>7(OUT ONLY)</repname>
         <string size='8'><name>Description</name></string>
         <int size='1'>
           <name>Channel type</name>
@@ -130,10 +138,10 @@ const char configDefInfo[] PROGMEM =
             <relation><property>4</property><value>Input with pull-up Inverted</value></relation>
             <relation><property>5</property><value>Toggle</value></relation>
             <relation><property>6</property><value>Toggle with pull-up</value></relation>
-            <relation><property>7</property><value>Output PA</value></relation>
-            <relation><property>8</property><value>Output PA Inverted</value></relation>
-            <relation><property>9</property><value>Output PB</value></relation>
-            <relation><property>10</property><value>Output PB Inverted</value></relation>
+            <relation><property>7</property><value>Output Phase A</value></relation>
+            <relation><property>8</property><value>Output Phase A Inverted</value></relation>
+            <relation><property>9</property><value>Output Phase B</value></relation>
+            <relation><property>10</property><value>Output Phase B Inverted</value></relation>
           </map>
         </int>
         <int size='1'>
@@ -230,12 +238,11 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 //#include <ESP32Servo.h> //// ESP32
 Servo servo[2];
 uint8_t servodelay;
-//uint8_t servopin[NUM_SERVOS] = {32,33};  // CHOOSE PINS FOR SERVOS
 uint8_t servopin[NUM_SERVOS] = { SERVOPINS };  // CHOOSE PINS FOR SERVOS
 uint8_t servoActual[NUM_SERVOS];
 uint8_t servoTarget[NUM_SERVOS];
 
-uint8_t iopin[NUM_IO] = { IOPINS }; //// ESP32 
+uint8_t iopin[NUM_IO] = { IOPINS }; // ESP32 
 
 enum Type { tNONE=0, tIN, tINI, tINP, tINPI, tTOG, tTOGI, tPA, tPAI, tPB, tPBI };
 bool iostate[NUM_IO] = {0};  // state of the iopin
@@ -246,7 +253,7 @@ unsigned long next[NUM_IO] = {0};
 void userInitAll()
 { 
   NODECONFIG.put(EEADDR(nodeName), ESTRING(BOARD));
-  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("2Servos24IO"));
+  NODECONFIG.put(EEADDR(nodeDesc), ESTRING("G3_2Servos24IO"));
   NODECONFIG.update(EEADDR(servodelay), 50);
   NODECONFIG.update(EEADDR(saveperiod), 50);
   for(uint8_t i = 0; i < NUM_SERVOS; i++) {
@@ -276,12 +283,14 @@ uint8_t userState(uint16_t index) {
       if( curpos[ch]==pos ) return VALID;
                 else return INVALID;
     }
-    int ch = (index - NUM_SERVOS*NUM_POS)/2;
+    // iostate: indicates whether the channel is ON (1) or OFF(0). 
+    index = index - NUM_SERVOS*NUM_POS; // corrected for servos
+    int ch = index/2;  // two event indices per channel 
     if( NODECONFIG.read(EEADDR(io[ch].type))==0) return UNKNOWN;
-    int evst = index % 2;
-    //dP((uint8_t) iostate[ch]==evst);
-    if( iostate[ch]==evst ) return VALID;
-    return INVALID;
+    uint8_t eidstate = index%2 ? 1 : 0;  // even eventids are ON, and odd ones are OFF
+    dP("\n userState for "); PV(ch); PV(iostate[ch]); PV(eidstate);
+    if( eidstate == iostate[ch] ) return VALID;  // if the implied eidstate is equal to the actual state, then return VALID
+    return INVALID;                              // else return INVALID
 }
     
 
@@ -298,10 +307,7 @@ void pceCallback(uint16_t index) {
 // Sample code uses inverse of low bit of pattern to drive pin all on or all off.
 // The pattern is mostly one way, blinking the other, hence inverse.
 //
-  dP("\npceCallback, index="); dP((uint16_t)index);
-  if(index<NUM_SERVOS*NUM_POS) { dP("\n servo "); dP(index/NUM_POS); }
-  else if(index<(NUM_SERVOS*NUM_POS+NUM_NATIVE_IO*2)) { dP("\n native "); dP((index-NUM_SERVOS*NUM_POS)/2); }
-  else { dP("\n mcp "); dP((index-NUM_SERVOS*NUM_POS-NUM_NATIVE_IO*2)/2); }
+  dP("\npceCallback, raw index="); dP((uint16_t)index);
     if(index<NUM_SERVOS*NUM_POS) {
       uint8_t outputIndex = index / 3;
       uint8_t outputState = index % 3;
@@ -310,24 +316,25 @@ void pceCallback(uint16_t index) {
       servoTarget[outputIndex] = NODECONFIG.read( EEADDR(servos[outputIndex].pos[outputState].angle) );
       dP("\nservo "); dP(outputIndex); dP(" to state="); dP(outputState); dP(" target="); dP(servoTarget[outputIndex]);
     } else {
-      int ch = (index - NUM_SERVOS*NUM_POS)/2;
-      PV(ch);
+      index = index - NUM_SERVOS*NUM_POS; // fix offset
+      int ch = index/2;
       uint8_t type = NODECONFIG.read(EEADDR(io[ch].type));
-      PV(type);
+      if(ch<NUM_NATIVE_IO) { dP("\n native io "); PV(index); PV(ch); PV(type); }
+      if(ch>=NUM_NATIVE_IO) { dP("\n mcp io "); PV(index); PV(ch-NUM_NATIVE_IO); PV(type); }
       if(type>=7) {
         // 7=PA 8=PAI 9=PB 10=PBI
-        bool inv = !(type&1);       // inverted
+        bool inv = !(type&1);       // inverted=1
         if( index%2 ) {
-          dP("\noff"); PV(ch); PV(type); PV(inv);
-          if(ch<NUM_NATIVE_IO) digitalWrite( iopin[ch], inv);
-          else mcp.digitalWrite( ch-NUM_NATIVE_IO, inv);
+          dP("\n  OFF"); PV(ch); PV(type); PV(inv);
+          digWrite(ch, inv);
           next[ch] = 0;
+          iostate[ch] = 0; // remember the state
         } else {
           bool pha = type<9;       // phaseA
-          dP("\nON"); PV(ch); PV(pha); PV(inv); 
-          if(ch<NUM_NATIVE_IO) digitalWrite( iopin[ch], pha ^ inv);
-          else mcp.digitalWrite( ch-NUM_NATIVE_IO, pha ^ inv);
-          iostate[ch] = 1;
+          dP("\n  ON"); PV(ch); PV(pha); PV(inv); 
+          digWrite(ch, pha ^ inv); 
+          iostate[ch] = 1;  // remember the state
+          // turned on, so set up for pulse, if necessary
           uint8_t durn;
           durn = NODECONFIG.read(EEADDR(io[ch].duration));
           PV(durn);
@@ -339,41 +346,36 @@ void pceCallback(uint16_t index) {
     }
 }
 
+
 // === Process servos ===
 // This is called from loop to service the servos
 bool posdirty = false;
 void servoProcess() {
-  static long servolast = 0;
-  if( (millis()-servolast) < servodelay ) return;
-  servolast = millis();
+  static long last = 0;
+  if( (millis()-last) < servodelay ) return;
+  last = millis();
   static long lastmove = 0;
-  for(int i=0; i< NUM_SERVOS; i++) {
+  for(int i=0; i<NUM_SERVOS; i++) {
     if(servoTarget[i] == servoActual[i] ) continue;
-    uint8_t dd = 200/servodelay;
-    //if( natservodelay<20 ) {
-      if((servoTarget[i]-servoActual[i])>4 ) servoActual[i]+=dd/4;
-      if((servoActual[i]-servoTarget[i])>4 ) servoActual[i]-=dd/4;
-    //}
     if(servoTarget[i] > servoActual[i] ) servoActual[i]++;
     else if(servoTarget[i] < servoActual[i] ) servoActual[i]--;
     if(!servo[i].attached()) { 
       servo[i].attach(servopin[i]);
-      //delay(100);
+      delay(100);
     }
     //servo[i].attach(servopin[i]);
     servo[i].write(servoActual[i]);
-    //P("\n servomove"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
+    P("\n servomove"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
     lastmove = millis();
     posdirty =true;
   }
 
-  if( lastmove && (millis()-lastmove)>4000) {
-    for(int i=0; i< NUM_SERVOS; i++) servo[i].detach();
+  if( lastmove && (millis()-lastmove)>1000) {
+    for(int i=0; i<NUM_SERVOS; i++) servo[i].detach();
     lastmove = 0;
     //dP("\n detach()");
+    //printMem();
   }
-
-
 
   static long lastsave = 0;
   uint32_t saveperiod = getSavePeriod();
@@ -401,11 +403,10 @@ void produceFromInputs() {
     last = millis();
     uint8_t type = NODECONFIG.read(EEADDR(io[c].type));
     uint8_t d;
+    bool s;
     if(type==5 || type==6) {
       //dP("\n"); PV(c); PV(type);
-      bool s;
-      if(c<NUM_NATIVE_IO) s = digitalRead(iopin[c]);
-      else s = mcp.digitalRead(c-NUM_NATIVE_IO);
+      s = digRead(c);
       //PV(s); PV(iostate[c]);
       if(s != iostate[c]) {
         iostate[c] = s;
@@ -423,9 +424,7 @@ void produceFromInputs() {
     if(type>0 && type<5) {
       //dP("\n"); PV(c); PV(type);
       bool inv = !(type&1);
-      bool s;
-      if(c<NUM_NATIVE_IO) s = inv ^ digitalRead(iopin[c]);
-      else s = inv ^ mcp.digitalRead(c-NUM_NATIVE_IO);
+      s = inv ^ digRead(c);
       if(s != iostate[c]) {
         iostate[c] = s;
         //d = NODECONFIG.read(EEADDR(io[c].duration)); 
@@ -541,44 +540,62 @@ void servoSet() {
   }
 }
 
+void setMode(uint8_t ch, uint8_t mode) {
+  if(ch<NUM_NATIVE_IO) pinMode(iopin[ch], mode);
+  else mcp.pinMode(ch-NUM_NATIVE_IO, mode);
+}
+uint8_t digRead(uint8_t ch) {
+  if(ch<NUM_NATIVE_IO) return digitalRead(iopin[ch]);
+  else return mcp.digitalRead(ch-NUM_NATIVE_IO);
+}
+void digWrite(uint8_t ch, uint8_t v) {
+  if(ch<NUM_NATIVE_IO) digitalWrite(iopin[ch], v);
+  else mcp.digitalWrite(ch-NUM_NATIVE_IO, v);
+}
 // Setup the io pins
 // called by setup() and after a configuration change
+// determines the iostate of each pin/channel, so userState an report accurately.  
 void setupIOPins() {
   dP("\nPins: ");
   for(uint8_t i=0; i<NUM_IO; i++) {
     uint8_t type = NODECONFIG.read( EEADDR(io[i].type));
+    if(i<NUM_NATIVE_IO) { dP("\n native "); dP(iopin[i]); dP(":"); dP(type); dP(" ="); dP(iostate[i]); }
+    else { dP("\n mcp "); dP(i-NUM_NATIVE_IO); dP(":"); dP(type); dP(" ="); dP(iostate[i-NUM_NATIVE_IO]); }
+    bool s;
     switch (type) {  // No PULLUP
       case 1: case 2: case 5:
         if(type==1) dP(" IN");
         if(type==2) dP(" INI");
         if(type==5) dP(" TOG");
-        if(i<NUM_NATIVE_IO) pinMode(iopin[i], INPUT);
-        else mcp.pinMode(i-NUM_NATIVE_IO, INPUT);
-        iostate[i] = type&1;
-        if(type==5) iostate[i] = 0;
+        setMode(i, INPUT);
+        s = digRead(i);
+        if(type==1) iostate[i] = s;  
+        if(type==2) iostate[i] = !s; // inverted
+        if(type==5) iostate[i] = s;  
         break;
       case 3: case 4: case 6: // PULLUPS
-        if(type==3) dP(" INP");
+        if(type==3) dP(" INP"); 
         if(type==4) dP(" INPI");
         if(type==6) dP(" TOGP");
-        if(i<NUM_NATIVE_IO) pinMode(iopin[i], INPUT_PULLUP); 
-        else mcp.pinMode(i-NUM_NATIVE_IO, INPUT_PULLUP);
-        iostate[i] = type&1;
+        setMode(i, INPUT_PULLUP);
+        s = digRead(i);
+        if(type==3) iostate[i] = !s;  // ON for INP
+        if(type==4) iostate[i] = s;  // OFF for INPI
+        if(type==6) iostate[i] = !s;  // ON for TOGI        
         break;
       case 7: case 8: case 9: case 10:
         if(type==7) dP(" PA");
         if(type==8) dP(" PAI");
         if(type==9) dP(" PB");
         if(type==10) dP(" PBI");
-        if(i<NUM_NATIVE_IO) pinMode(iopin[i], OUTPUT); 
-        else mcp.pinMode(i-NUM_NATIVE_IO, OUTPUT); 
-        iostate[i] = !type&1;
-        if(i<NUM_NATIVE_IO) digitalWrite(iopin[i], !type&1);
-        else mcp.digitalWrite(i-NUM_NATIVE_IO, !type&1);
+        setMode(i, OUTPUT);
+        if(type==7) iostate[i] = 0;  // OFF for PA
+        if(type==8) iostate[i] = 1;  // ON for PAI
+        if(type==9) iostate[i] = 1;  // ON for PB
+        if(type==10) iostate[i] = 0; // OFF for PBI
+        digWrite(i, iostate[i]);
         break;
     }
-    if(i<NUM_NATIVE_IO) { dP("\n native "); dP(iopin[i]); dP(":"); dP(type); }
-    else { dP("\n mcp "); dP(i-NUM_NATIVE_IO); dP(":"); dP(type); }
   }
 }
 
@@ -589,32 +606,28 @@ void appProcess() {
   unsigned long now = millis();
   for(int i=0; i<NUM_IO; i++) {
     uint8_t type = NODECONFIG.read(EEADDR(io[i].type));
+    // Outputs
     if(type >= 7) {
       if( next[i] && now>next[i] ) {
         //dP("\nappProcess "); PV(now);
         bool inv = !(type&1);
         bool phb = type>8;
-        if(iostate[i]) {
+        if(iostate[i]) {  // if ON-state
           // phaseB
           dP("\nphaseB"); PV(i); PV(phb); PV(inv); PV(phb ^ inv);
-          if(i<NUM_NATIVE_IO) {
-            digitalWrite(iopin[i], phb ^ inv);
-            PV(iopin[i]);
-          } else {
-            mcp.digitalWrite(i-NUM_NATIVE_IO, phb ^ inv);
-            PV(i-NUM_NATIVE_IO)
-          }
+          digWrite(i, phb ^ inv);
           iostate[i] = 0;
+          // set up for a repeat, if necessary
           if( NODECONFIG.read(EEADDR(io[i].period)) > 0 ) 
           next[i] = now + 100*NODECONFIG.read(EEADDR(io[i].period));
           else next[i] = 0;
             PV(next[i]);
-        } else {
+        } else {         // else OFF state
           // phaseA
           dP("\nphaseA"); PV(i); PV(phb); PV(inv); PV(!phb ^ inv);
-          if(i<NUM_NATIVE_IO) digitalWrite(iopin[i], !phb ^ inv);
-          else mcp.digitalWrite(i-NUM_NATIVE_IO, !phb ^ inv);
+          digWrite(i, !phb ^ inv);
           iostate[i] = 1;
+          // set up for a pulse, if necessary
           if( NODECONFIG.read(EEADDR(io[i].duration)) > 0 )
             next[i] = now + 100*NODECONFIG.read(EEADDR(io[i].duration));
           else next[i] = 0;

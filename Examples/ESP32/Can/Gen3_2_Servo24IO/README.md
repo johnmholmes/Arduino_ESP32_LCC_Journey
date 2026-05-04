@@ -8,6 +8,8 @@ This sketch implements:
    If an output it may be solid, pulse or flashing, and consumes an on- and 0ff-event. 
    If an input it produces an on- and off-event, which may each be delayed.  The 
      inputs can be with or with pullups, inverted or not, or can be toggle. 
+   The first 8 io are native, that is implemented on a set of EPS32 pins.
+   The remaining 16 io are implemented on a MCP23017 at I2C address 0x20. 
 
 It demonstrates: 
 * CDI
@@ -26,7 +28,12 @@ The 8 native I/O are on pins 16,17,18,19,14,27,26,25 in this order when configur
 The 16 MCP23017 pins are split into 2 banks of 8 A0 to A7 and B0 to B7
 The MCP23017 uses the address of 0x20 Pin 21 SDA  Pin 22 SCL.
 
-We now use a config.h tab to change the node ID which is in line 18 of the config.h The factory reset is changed in line 22.
+NOTE: Channels 15 and 31 can be used as **outputs** only.  These are PA7 and PB7 on the MCP23017.  
+  See: https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23017-Data-Sheet-DS20001952.pdf
+
+
+
+
 
 
 

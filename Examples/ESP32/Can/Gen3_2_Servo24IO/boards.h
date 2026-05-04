@@ -22,7 +22,6 @@
     #include <ACAN2515.h>
   #endif // USEGCSERIAL
   #include <Servo.h>
-  //#define EEPROMbegin EEPROM.begin(1000);
   #define EEPROMbegin 
   #define EEPROMcommit 
   #define WIRE_begin 
@@ -30,7 +29,24 @@
 
 #elif defined(ESP32_BOARD)
   #define BOARD "ESP32"
-  //#define NUM_SERVOS 2
+  #define SERVOPINS     32, 33
+  #define NUM_NATIVE_IO  8
+  #define IOPINS        16,17,18,19,14,27,26,25
+  #define NUM_IO        24    // calcualte by hand = 8+16
+  #define CAN_TX_PIN (gpio_num_t) 2
+  #define CAN_RX_PIN (gpio_num_t) 15
+  #ifndef USEGCSERIAL
+    #include "ACAN_ESP32Can.h"
+  #endif // USEGCSERIAL
+  #include <ESP32Servo.h>
+  #define EEPROMSIZE 4096
+  #define EEPROMbegin if(!EEPROM.begin(EEPROMSIZE )) { Serial.println("Failed to initialize EEPROM"); }
+  #define EEPROMcommit EEPROM.commit();
+  #define WIRE_begin Wire.begin(21, 22, 100000)
+
+
+#elif defined(ESP32_BOARD_ALT)
+  #define BOARD "ESP32"
   #define SERVOPINS     32, 33
   #define NUM_NATIVE_IO  8
   #define IOPINS        16,17,18,19,14,27,26,25
@@ -42,8 +58,7 @@
   #endif // USEGCSERIAL
   #include <ESP32Servo.h>
   #define EEPROMSIZE 4096
-  //#define EEPROMbegin EEPROM.begin(1000);
-  #define EEPROMbegin if(!EEPROM.begin(sizeof(MemStruct)+100)) { Serial.println("Failed to initialize EEPROM"); }
+  #define EEPROMbegin if(!EEPROM.begin(EEPROMSIZE )) { Serial.println("Failed to initialize EEPROM"); }
   #define EEPROMcommit EEPROM.commit();
   #define WIRE_begin Wire.begin(21, 22, 100000)
 

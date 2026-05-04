@@ -4,7 +4,8 @@
 
 // Choose a board, uncomment one line, see boards.h
 //#define NANO_BOARD
-#define ESP32_BOARD
+//#define ESP32_BOARD
+#define ESP32_BOARD_ALT  // Alternate pinout
 //#define ATOM_BOARD
 //#define ATOM_BOARD_WITH_BASE
 //#define MINIMA_BOARD
@@ -16,7 +17,7 @@
 //#define USEGCSERIAL
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x07  // must be unique from an address space owned by you or DIY
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x04  // must be unique from an address space owned by you or DIY
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
@@ -27,7 +28,7 @@
 #define NUM_SERVOS 2
 #define NUM_POS 3
 //#define NUM_NATIVE_IO 8 see boards
-#define MCP_ADDRESS 0x20  //// Choose address for mcp23017 board
+#define MCP_ADDRESS 0x20  // Choose address for mcp23017 board
 #define NUM_MCP_GROUPS 2
 #define NUM_MCP_IO_PER_GROUP 8
 #define NUM_MCP_IO (NUM_MCP_GROUPS * NUM_MCP_IO_PER_GROUP)
