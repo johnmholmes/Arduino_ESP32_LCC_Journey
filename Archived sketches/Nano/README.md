@@ -1,5 +1,7 @@
 # Arduino Nano R3 ATmega328PB
 
+## No longer being update
+
 This Arduino Nano is the first MCU I investigated for use within LCC. While it does have limited memory it has proven to still offer some use for smaller layouts. 
 
 - The example sketches in these folders offer Can bus and standalone Nodes.
