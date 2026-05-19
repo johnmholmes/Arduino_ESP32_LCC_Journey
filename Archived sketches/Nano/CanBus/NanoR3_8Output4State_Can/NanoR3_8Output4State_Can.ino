@@ -239,7 +239,7 @@ void userHardReset() {
 void userConfigWritten(uint32_t address, uint16_t length, uint16_t func) {
 }
 
- 
+NodeID nodeid(NODE_ADDRESS);  // this node's nodeid, do not move 
 #include "OpenLCBMid.h"           // System house-keeping
 
 // Function to handle blinking

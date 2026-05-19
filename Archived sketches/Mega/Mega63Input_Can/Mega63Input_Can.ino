@@ -272,6 +272,7 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func) {
 void userSoftReset() {}
 void userHardReset() {}
 
+NodeID nodeid(NODE_ADDRESS);  // this node's nodeid, do not move
 #include "OpenLCBMid.h"    // Essential, do not move or delete
 
 // Setup does initial configuration

@@ -377,6 +377,7 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func) {
   setupPins();
 }
 
+NodeID nodeid(NODE_ADDRESS);  // this node's nodeid, do not move
 #include "OpenLCBMid.h"           // System house-keeping
 
 enum Action { aNONE=0, aLOW=1, aHIGH, aFLASH, aDSTROBE, aRANDOM, aFIRE, aFIREOFF };

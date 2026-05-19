@@ -322,6 +322,7 @@ void processProducer() {
 void userSoftReset() {}
 void userHardReset() {}
 
+NodeID nodeid(NODE_ADDRESS);  // this node's nodeid, do not move
 #include "OpenLCBMid.h"    // Essential, do not move or delete
 
 // Callback from a Configuration write
