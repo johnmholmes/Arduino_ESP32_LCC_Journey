@@ -739,8 +739,8 @@ void setup()
 //     }
 
   #if 1
-    NODECONFIG.write( EEADDR( servos[0].pos[0].angle ), 45);
-    NODECONFIG.write( EEADDR( servos[0].pos[NUM_POS-1].angle ), 135);
+    NODECONFIG.write( EEADDR( servos[0].pos[0].angle ), 90);
+    NODECONFIG.write( EEADDR( servos[0].pos[NUM_POS-1].angle ), 90);
   #endif
 
 }
