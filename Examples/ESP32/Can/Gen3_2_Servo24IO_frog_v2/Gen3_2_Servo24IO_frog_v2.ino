@@ -80,8 +80,8 @@ const char configDefInfo[] PROGMEM =
           <hints><slider tickSpacing='45' immediate='yes' showValue='yes'> </slider></hints>
         </int>
       </group>
-      <eventid><name>Frog Down EventID sent when servo is travelling Anticlockwise position</name></eventid>
-      <eventid><name>Frog Up EventID sent when servo is travelling Clockwise</name></eventid>
+      <eventid><name>Frog Down EventID sent when servo is travelling Anticlockwise direction</name></eventid>
+      <eventid><name>Frog Up EventID sent when servo is travelling Clockwise direction</name></eventid>
       <eventid><name>Servo has reached its Thrown target position</name></eventid>
       <eventid><name>Servo has reached its Closed target position</name></eventid>
     </group>
