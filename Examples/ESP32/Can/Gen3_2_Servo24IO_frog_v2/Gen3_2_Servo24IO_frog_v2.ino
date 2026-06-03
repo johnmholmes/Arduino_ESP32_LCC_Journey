@@ -1,4 +1,3 @@
-//This is the final version before release to GitHub.
 /*This is in beta testing but here to give a chance to have a look
   at the sketch
 
@@ -11,15 +10,17 @@ This is my test version for demonstration CAN Bus use only by John Holmes
 
 */
 //==============================================================
-// AVR 2Servos NIO using ESPcan
+// AVR 2Servos 24 IO using ESPcan
 //
 // Coprright 2024 David P Harris
 // derived from work by Alex Shepherd and David Harris
-// Updated 2024.11.14
+// Updated 2026.June.03 by John Holmes
 //==============================================================
 // - 2 Servo channels, each with 
 //     - three settable positions
 //     - three set position events 
+//     - two midpoint events
+//     - Two end target reached vents
 // - N input/output channels:
 //     - type: 0=None, 
 //             1=Input, 2=Input inverted, 
@@ -79,8 +80,8 @@ const char configDefInfo[] PROGMEM =
           <hints><slider tickSpacing='45' immediate='yes' showValue='yes'> </slider></hints>
         </int>
       </group>
-      <eventid><name>Frog Down EventID sent when servo is travelling towards Closed position</name></eventid>
-      <eventid><name>Frog Up EventID sent when servo is travelling towards Thrown position</name></eventid>
+      <eventid><name>Frog Down EventID sent when servo is travelling Anticlockwise position</name></eventid>
+      <eventid><name>Frog Up EventID sent when servo is travelling Clockwise</name></eventid>
       <eventid><name>Servo has reached its Thrown target position</name></eventid>
       <eventid><name>Servo has reached its Closed target position</name></eventid>
     </group>
