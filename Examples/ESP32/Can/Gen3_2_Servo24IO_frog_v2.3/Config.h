@@ -14,7 +14,7 @@
 //#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
-#define USEGCSERIAL
+//#define USEGCSERIAL
 
 // To set a new nodeid edit the next line
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x06  // must be unique from an address space owned by you or DIY
