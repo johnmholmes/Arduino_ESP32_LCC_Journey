@@ -96,7 +96,7 @@ extern "C" {                      // the following are defined as external
             <int size="1"><name>pin#</name>
                 <map>
                   <relation><property>0</property><value>None</value></relation>
-                  <relation><property>1</property><value>2</value></relation>
+                  <relation><property>1</property><value>4</value></relation>
                   <relation><property>2</property><value>16</value></relation>
                   <relation><property>3</property><value>17</value></relation>
                   <relation><property>4</property><value>18</value></relation>
@@ -226,7 +226,7 @@ uint8_t protocolIdentValue[6] = {     // 0xD7,0x58,0x00,0,0,0};
 
 // ===== Process outputs and Producers eventids =====
 // USER defined
-uint8_t pin[NUM_CHANNEL] = {2,16,17,18,19,21,22,23,13,12,14,27,26,25,33,32 };  // 16 channel
+uint8_t pin[NUM_CHANNEL] = {4,16,17,18,19,21,22,23,13,12,14,27,26,25,33,32 };  // 16 channel
 uint8_t currentEvent[NUM_CHANNEL];
 uint8_t state[NUM_CHANNEL]; 
 long timer[NUM_CHANNEL];
