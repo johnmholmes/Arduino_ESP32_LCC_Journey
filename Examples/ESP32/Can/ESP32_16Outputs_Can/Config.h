@@ -3,11 +3,12 @@
 // Debugging -- uncomment to activate debugging statements:
 //#define DEBUG Serial
 
-#define CAN_RX_PIN (gpio_num_t) 4
-#define CAN_TX_PIN (gpio_num_t) 5
+#define CAN_RX_PIN (gpio_num_t) 15
+#define CAN_TX_PIN (gpio_num_t) 2
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //#define USEGCSERIAL
+//#include "GCSerial.h"
 
 // To set a new nodeid edit the next line
 #define NODE_ADDRESS  5,1,1,1,0x8E,0x19  // must be unique from an address space owned by you or DIY

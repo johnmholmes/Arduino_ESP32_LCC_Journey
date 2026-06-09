@@ -47,7 +47,7 @@
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 // Note: disable debugging if this is chosen
 
-//#include "GCSerial.h"
+
 #include "Config.h"   // Contains configuration, see "Config.h"
 
 
