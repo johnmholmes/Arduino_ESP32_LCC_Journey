@@ -4,20 +4,20 @@
 
 // Choose a board, uncomment one line, see boards.h
 //#define NANO_BOARD
-//#define ESP32_BOARD
-#define ESP32_BOARD_ALT  // Alternate pinout
+#define ESP32_BOARD
+//#define ESP32_BOARD_ALT  // Alternate pinout
 //#define ATOM_BOARD
 //#define ATOM_BOARD_WITH_BASE
 //#define MINIMA_BOARD
 
 // Debugging -- uncomment to activate debugging statements:
-#define DEBUG Serial
+//#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 //#define USEGCSERIAL
 
 // To set a new nodeid edit the next line
-#define NODE_ADDRESS  5,1,1,1,0x8E,0x04  // must be unique from an address space owned by you or DIY
+#define NODE_ADDRESS  5,1,1,1,0x8E,0x01  // must be unique from an address space owned by you or DIY
 
 // To Force Reset EEPROM to Factory Defaults set this value to 1, else 0.
 // Need to do this at least once.
@@ -32,7 +32,7 @@
 #define NUM_MCP_GROUPS 2
 #define NUM_MCP_IO_PER_GROUP 8
 #define NUM_MCP_IO (NUM_MCP_GROUPS * NUM_MCP_IO_PER_GROUP)
-#define NUM_EVENT ((NUM_SERVOS * NUM_POS) + ((NUM_NATIVE_IO + (NUM_MCP_GROUPS * NUM_MCP_IO_PER_GROUP))*2))
+#define NUM_EVENT ((NUM_SERVOS * (NUM_POS+2)) + ((NUM_NATIVE_IO + (NUM_MCP_GROUPS * NUM_MCP_IO_PER_GROUP))*2))
 
 // add MCP23017
 #include <MCP23017.h>
@@ -59,7 +59,8 @@ const bool USE_90_ON_STARTUP = true;  // move
 // These allow automatic regostering of eventids
 // If NUM_SERVOS>8 or NUM_IO>16 these will need extending
 // Expands depending on NUM_SERVOS and NUM_IO
-#define REG_SERVO_OUTPUT(s) CEID(servos[s].pos[0].eid), CEID(servos[s].pos[1].eid), CEID(servos[s].pos[2].eid)
+#define REG_SERVO_OUTPUT(s) CEID(servos[s].pos[0].eid), CEID(servos[s].pos[1].eid), CEID(servos[s].pos[2].eid), \
+        PEID(servos[s].upFrogEid), PEID(servos[s].downFrogEid)
 #define REG_IO(i) PCEID(io[i].onEid), PCEID(io[i].offEid)
 
 #define _SERVOEID_1 REG_SERVO_OUTPUT(0)

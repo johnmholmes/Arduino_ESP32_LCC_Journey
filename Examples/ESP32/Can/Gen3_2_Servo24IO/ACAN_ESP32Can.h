@@ -14,7 +14,7 @@
 #include <ACAN_ESP32.h>
 #include <esp_chip_info.h>
 #include <esp_flash.h>
-#include <core_version.h> // For ARDUINO_ESP32_RELEASE
+//#include <core_version.h> // For ARDUINO_ESP32_RELEASE
 
 #define P(...) Serial.print(__VA_ARGS__)
 #define PV(x) { P(" " #x "="); P(x); }
