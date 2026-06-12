@@ -1,6 +1,6 @@
 # ESP32 Examples
 
-These are sketches are written allocated by a certain type of Arduino Eco-system board.
+These sketches are written allocated by a certain type of Arduino Eco-system board.
 
 They demonstrates:
 
