@@ -67,7 +67,8 @@ const char configDefInfo[] PROGMEM =
     <group replication=')" N(NUM_SERVOS) R"('>
       <name>Servos</name>
       <hints><visibility hideable='yes' hidden='yes' ></visibility></hints>
-      <repname>Servo </repname>
+      <repname>Servo Pin 32</repname>
+      <repname>Servo Pin 33</repname>
       <string size='8'><name>Description</name></string>
       <group replication=')" N(NUM_POS) R"('>
       <name>  Closed     Midpoint   Thrown</name>
@@ -79,13 +80,18 @@ const char configDefInfo[] PROGMEM =
           <hints><slider tickSpacing='45' immediate='yes' showValue='yes'> </slider></hints>
         </int>
       </group>
-      <eventid><name>Frog Up EventID sent when servo is travelling towards Thrown position</name></eventid>
-      <eventid><name>Frog Down EventID sent when servo is travelling towards Closed position</name></eventid>
     </group>
     <group replication=')" N(NUM_NATIVE_IO) R"('>
       <name>Native IO</name>
       <hints><visibility hideable='yes' hidden='yes' ></visibility></hints>
-      <repname>1</repname>
+      <repname>Pin 16</repname>
+      <repname>Pin 17</repname>
+      <repname>Pin 18</repname>
+      <repname>Pin 19</repname>
+      <repname>Pin 14</repname>
+      <repname>Pin 27</repname>
+      <repname>Pin 26</repname>
+      <repname>Pin 25</repname>
       <string size='8'><name>Description</name></string>
       <int size='1'>
         <name>Channel type</name>
@@ -177,8 +183,6 @@ const char configDefInfo[] PROGMEM =
               EventID eid;       // consumer eventID
               uint8_t angle;     // position
             } pos[NUM_POS];
-            EventID upFrogEid;    // producer eventID
-            EventID downFrogEid;  // produder eventID
           } servos[NUM_SERVOS];
           struct {
             char desc[8];
@@ -197,9 +201,15 @@ uint8_t curpos[NUM_SERVOS];
 
 
 extern "C" {
-    // ===== eventid Table =====    
+    // ===== eventid Table =====
+    #define REG_SERVO_OUTPUT(s) CEID(servos[s].pos[0].eid), CEID(servos[s].pos[1].eid), CEID(servos[s].pos[2].eid)
+    #define REG_IO(i) PCEID(io[i].onEid), PCEID(io[i].offEid)
+    #define REG_NAT(g) REG_IO(g+0), REG_IO(g+1), REG_IO(g+2), REG_IO(g+3), REG_IO(g+4), REG_IO(g+5), REG_IO(g+6), REG_IO(g+7) 
+    
     //  Array of the offsets to every eventID in MemStruct/EEPROM/mem, and P/C flags
     const EIDTab eidtab[NUM_EVENT] PROGMEM = {
+        //REG_SERVO_OUTPUT(0), REG_SERVO_OUTPUT(1),
+        //REG_NAT(0), REG_NAT(8), REG_NAT(16), 
         SERVOEID(NUM_SERVOS),
         IOEID(NUM_IO)
     };
@@ -234,7 +244,7 @@ uint8_t protocolIdentValue[6] = {   //0xD7,0x58,0x00,0,0,0};
 
 //#include <Servo.h>    //// NANO, Minima etc
 //#include <ESP32Servo.h> //// ESP32
-Servo servo[2];
+Servo servo[NUM_SERVOS];
 uint8_t servodelay;
 uint8_t servopin[NUM_SERVOS] = { SERVOPINS };  // CHOOSE PINS FOR SERVOS
 uint8_t servoActual[NUM_SERVOS];
@@ -246,12 +256,6 @@ enum Type { tNONE=0, tIN, tINI, tINP, tINPI, tTOG, tTOGI, tPA, tPAI, tPB, tPBI }
 bool iostate[NUM_IO] = {0};  // state of the iopin
 bool logstate[NUM_IO] = {0}; // logic state for toggle
 unsigned long next[NUM_IO] = {0};
-
-#ifdef DEBUG
-  #define PV(x) { Serial.print(" " #x "="); Serial.print(x); }
-#else
-  #define PV(x) 
-#endif
 
 // This is called to initialize the EEPROM to Factory Reset
 void userInitAll()
@@ -280,22 +284,15 @@ void userInitAll()
 enum evStates { VALID=4, INVALID=5, UNKNOWN=7 };
 uint8_t userState(uint16_t index) {
   //dP("\n userState "); dP((uint16_t) index);
-    if(index < NUM_SERVOS*(NUM_POS+2)) {
-      int ch = index/5;
-      int neid = index%5;
+    if(index < NUM_SERVOS*NUM_POS) {
+      int ch = index/3;
+      int pos = index%3;
       //dP( (uint8_t) curpos[ch]==pos);
-      if( neid<3 && curpos[ch]==neid ) return VALID;
+      if( curpos[ch]==pos ) return VALID;
                 else return INVALID;
-      // frog event status
-      if( neid==3 && curpos[ch]==0 ) return VALID;
-      if( neid==3 && curpos[ch]==1 ) return UNKNOWN;
-      if( neid==3 && curpos[ch]==2 ) return INVALID;
-      if( neid==4 && curpos[ch]==0 ) return INVALID;
-      if( neid==4 && curpos[ch]==1 ) return UNKNOWN;
-      if( neid==4 && curpos[ch]==2 ) return VALID;
     }
     // iostate: indicates whether the channel is ON (1) or OFF(0). 
-    index = index - NUM_SERVOS*(NUM_POS+2); // corrected for servos
+    index = index - NUM_SERVOS*NUM_POS; // corrected for servos
     int ch = index/2;  // two event indices per channel 
     if( NODECONFIG.read(EEADDR(io[ch].type))==0) return UNKNOWN;
     uint8_t eidstate = index%2 ? 1 : 0;  // even eventids are ON, and odd ones are OFF
@@ -305,25 +302,11 @@ uint8_t userState(uint16_t index) {
 }
     
 
-
-// retrieve savePeriod
-uint32_t getSavePeriod() {
-  uint32_t saveperiod = NODECONFIG.read( EEADDR(saveperiod) );
-  return saveperiod * saveperiod * 1000;
-}
-
-void setMode(uint8_t ch, uint8_t mode) {
-  if(ch<NUM_NATIVE_IO) pinMode(iopin[ch], mode);
-  else mcp.pinMode(ch-NUM_NATIVE_IO, mode);
-}
-uint8_t digRead(uint8_t ch) {
-  if(ch<NUM_NATIVE_IO) return digitalRead(iopin[ch]);
-  else return mcp.digitalRead(ch-NUM_NATIVE_IO);
-}
-void digWrite(uint8_t ch, uint8_t v) {
-  if(ch<NUM_NATIVE_IO) digitalWrite(iopin[ch], v);
-  else mcp.digitalWrite(ch-NUM_NATIVE_IO, v);
-}
+  #ifdef DEBUG
+    #define PV(x) { Serial.print(" " #x "="); Serial.print(x); }
+  #else
+    #define PV(x) 
+  #endif
 
 // ===== Process Consumer-eventIDs =====
 void pceCallback(uint16_t index) {
@@ -333,16 +316,15 @@ void pceCallback(uint16_t index) {
 // The pattern is mostly one way, blinking the other, hence inverse.
 //
   dP("\npceCallback, raw index="); dP((uint16_t)index);
-    if(index<NUM_SERVOS*(NUM_POS+2)) {
-      uint8_t outputIndex = index / 5;
-      uint8_t outputState = index % 5;
-      if(outputState>2) return; // ignore frog events just in case
+    if(index<NUM_SERVOS*NUM_POS) {
+      uint8_t outputIndex = index / 3;
+      uint8_t outputState = index % 3;
       curpos[outputIndex] = outputState;
       servo[outputIndex].attach(servopin[outputIndex]);
       servoTarget[outputIndex] = NODECONFIG.read( EEADDR(servos[outputIndex].pos[outputState].angle) );
       dP("\nservo "); dP(outputIndex); dP(" to state="); dP(outputState); dP(" target="); dP(servoTarget[outputIndex]);
     } else {
-      index = index - NUM_SERVOS*(NUM_POS+2); // fix offset
+      index = index - NUM_SERVOS*NUM_POS; // fix offset
       int ch = index/2;
       uint8_t type = NODECONFIG.read(EEADDR(io[ch].type));
       if(ch<NUM_NATIVE_IO) { dP("\n native io "); PV(index); PV(ch); PV(type); }
@@ -391,19 +373,9 @@ void servoProcess() {
     }
     //servo[i].attach(servopin[i]);
     servo[i].write(servoActual[i]);
-    dP("\n servomove"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
+    P("\n servomove"); PV(i); PV(servoTarget[i]); PV(servoActual[i]);
     lastmove = millis();
     posdirty =true;
-    // need to send a frog event?
-    //uint8_t midpt = NODECONFIG.read( EEADDR( servos[i].pos[1].angle ) );
-    uint8_t midpt = ( NODECONFIG.read(EEADDR( servos[i].pos[0].angle ))+ NODECONFIG.read(EEADDR( servos[i].pos[NUM_POS-1].angle )) ) / 2;
-    PV(midpt);
-    // if we are at the mid position, then send the appropriate event, depending on direction
-    // note this only works if the algorithm uses single steps
-    if( servoActual[i] == midpt ) {
-      dP(" ==>"); 
-      OpenLcb.produce(i*NUM_SERVOS + NUM_POS + (servoTarget[i]<servoActual[i]) );
-    }
   }
 
   if( lastmove && (millis()-lastmove)>1000) {
@@ -432,7 +404,7 @@ void produceFromInputs() {
     // called from loop(), this looks at changes in input pins and
     // and decides which events to fire
     // with pce.produce(i);
-    const uint8_t base = NUM_SERVOS*(NUM_POS+2);
+    const uint8_t base = NUM_SERVOS*NUM_POS;
     static uint8_t c = 0;
     static unsigned long last = 0;
     if((millis()-last)<(50/NUM_IO)) return;
@@ -480,7 +452,7 @@ void produceFromInputs() {
 // Process pending producer events
 // Called from loop to service any pending event waiting on a delay
 void processProducer() {
-  const uint8_t base = NUM_SERVOS*(NUM_POS+2);
+  const uint8_t base = NUM_SERVOS*NUM_POS;
   static unsigned long last = 0;
   unsigned long now = millis();
   if( (now-last) < 50 ) return;
@@ -502,7 +474,7 @@ void processProducer() {
 void userSoftReset() {}
 void userHardReset() {}
 
-NodeID nodeid(NODE_ADDRESS);  // this node's nodeid, do not move
+NodeID nodeid(NODE_ADDRESS);       // this node's nodeid, do not move
 #include "OpenLCBMid.h"    // Essential, do not move or delete
 
 #if 0
@@ -537,13 +509,18 @@ void userConfigWritten(uint32_t address, uint16_t length, uint16_t func)
   dPS("\nuserConfigWritten: Addr: ", (uint32_t)address);
   dPS(" Len: ", (uint16_t)length);
   dPS(" Func: ", (uint8_t)func);
+  EEPROMcommit;
   setupIOPins();
   servodelay = NODECONFIG.read( EEADDR( servodelay ) );
   dP("\n servodelay="); dP(servodelay);
   servoSet();
 }
 
-
+// retrieve savePeriod
+uint32_t getSavePeriod() {
+  uint32_t saveperiod = NODECONFIG.read( EEADDR(saveperiod) );
+  return saveperiod * saveperiod * 1000;
+}
 
 // On startup: set curpos[i] to 1 and set servo to 90 or saved angle
 void servoStartUp() {
@@ -573,6 +550,18 @@ void servoSet() {
   }
 }
 
+void setMode(uint8_t ch, uint8_t mode) {
+  if(ch<NUM_NATIVE_IO) pinMode(iopin[ch], mode);
+  else mcp.pinMode(ch-NUM_NATIVE_IO, mode);
+}
+uint8_t digRead(uint8_t ch) {
+  if(ch<NUM_NATIVE_IO) return digitalRead(iopin[ch]);
+  else return mcp.digitalRead(ch-NUM_NATIVE_IO);
+}
+void digWrite(uint8_t ch, uint8_t v) {
+  if(ch<NUM_NATIVE_IO) digitalWrite(iopin[ch], v);
+  else mcp.digitalWrite(ch-NUM_NATIVE_IO, v);
+}
 // Setup the io pins
 // called by setup() and after a configuration change
 // determines the iostate of each pin/channel, so userState an report accurately.  
@@ -623,7 +612,7 @@ void setupIOPins() {
 // Process IO pins
 // called by loop to implement flashing on io pins
 void appProcess() {
-  uint8_t base = NUM_SERVOS * (NUM_POS+2);
+  uint8_t base = NUM_SERVOS * NUM_POS;
   unsigned long now = millis();
   for(int i=0; i<NUM_IO; i++) {
     uint8_t type = NODECONFIG.read(EEADDR(io[i].type));
@@ -709,12 +698,7 @@ void setup()
 //       dP(" type="); dP( NODECONFIG.read( EEADDR( io[i].type ) ) ); 
 //     }
 
-  #if 1
-    NODECONFIG.write( EEADDR( servos[0].pos[0].angle ), 90);
-    NODECONFIG.write( EEADDR( servos[0].pos[NUM_POS-1].angle ), 90);
-  #endif
-
-}
+ }
 
 // ==== Loop ==========================
 void loop() {
