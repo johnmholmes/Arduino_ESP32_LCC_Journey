@@ -7,7 +7,7 @@
 //#define MINIMA_BOARD
 
 // Debugging -- uncomment to activate debugging statements:
-#define DEBUG Serial
+//#define DEBUG Serial
 
 // Allow direct to JMRI via USB, without CAN controller, comment out for CAN
 #define USEGCSERIAL

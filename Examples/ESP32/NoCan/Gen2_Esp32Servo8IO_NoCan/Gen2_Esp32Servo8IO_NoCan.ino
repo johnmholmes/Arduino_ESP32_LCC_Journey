@@ -76,7 +76,8 @@ const char configDefInfo[] PROGMEM =
     </group>
     <group replication=')" N(NUM_SERVOS) R"('>
         <name>Servos</name>
-        <repname>Servo </repname>
+        <repname>Servo Pin 32</repname>
+        <repname>Servo Pin 33</repname>
         <string size='8'><name>Description</name></string>
         <group replication=')" N(NUM_POS) R"('>
         <name>  Closed     Midpoint   Thrown</name>
@@ -91,7 +92,7 @@ const char configDefInfo[] PROGMEM =
     </group>
     <group replication=')" N(NUM_IO) R"('>
         <name>Input/Output</name>
-        <repname>IO </repname>
+        <repname>Pin </repname>
         <string size='8'><name>Description</name></string>
         <int size='1'>
             <name>Channel type</name>
